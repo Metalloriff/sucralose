@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "./static/css/main.3dcf55f3.chunk.css",
+    "main.js": "./static/js/main.541b8a11.chunk.js",
+    "main.js.map": "./static/js/main.541b8a11.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.5814a1e9.js",
+    "runtime-main.js.map": "./static/js/runtime-main.5814a1e9.js.map",
+    "static/js/2.0ab55773.chunk.js": "./static/js/2.0ab55773.chunk.js",
+    "static/js/2.0ab55773.chunk.js.map": "./static/js/2.0ab55773.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.39fa1b0f34b015f5cf0551339072d8f8.js": "./precache-manifest.39fa1b0f34b015f5cf0551339072d8f8.js",
+    "service-worker.js": "./service-worker.js",
+    "static/css/main.3dcf55f3.chunk.css.map": "./static/css/main.3dcf55f3.chunk.css.map",
+    "static/js/2.0ab55773.chunk.js.LICENSE.txt": "./static/js/2.0ab55773.chunk.js.LICENSE.txt",
+    "static/media/Chevron.svg": "./static/media/Chevron.1fce7054.svg",
+    "static/media/Search.svg": "./static/media/Search.c6a0effb.svg",
+    "static/media/Sidebar.svg": "./static/media/Sidebar.b3f49afd.svg",
+    "static/media/Spinner.svg": "./static/media/Spinner.11e425a3.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5814a1e9.js",
+    "static/js/2.0ab55773.chunk.js",
+    "static/css/main.3dcf55f3.chunk.css",
+    "static/js/main.541b8a11.chunk.js"
+  ]
+}
