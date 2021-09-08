@@ -1,0 +1,67 @@
+@import "../Variables.scss";
+
+.MainPage {
+  .Head {
+    font-size: 1.25em;
+    text-align: center;
+    
+    margin: 100px 0;
+    
+    h1 {
+      color: $primaryColor;
+    }
+  }
+
+  .SearchFieldContainer {
+    width: 600px;
+  }
+  
+  .ButtonsContainer {
+    width: 500px;
+    margin-top: 50px;
+    
+    display: flex;
+    
+    .Right {
+      margin-left: auto;
+    }
+    
+    .Button {
+      display: flex;
+      align-items: center;
+      
+      margin-bottom: 7px;
+      padding: 7px;
+      
+      svg {
+        margin-right: 7px;
+      }
+      
+      .Title {
+        flex-grow: 1;
+      }
+      
+      cursor: pointer;
+      transition: color $ft, background-color $ft;
+      
+      &:Hover {
+        color: white;
+        background-color: $primaryColor;
+      }
+      
+      &.Disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+#root .Mobile .MainPage {
+  .SearchFieldContainer {
+    width: 80vw;
+  }
+  
+  .ButtonsContainer {
+    width: 80vw;
+  }
+}

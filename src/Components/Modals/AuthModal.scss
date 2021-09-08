@@ -1,0 +1,113 @@
+﻿@import "../../Variables";
+
+.AuthModal {
+	background-color: $primaryBG;
+	border-top: 10px solid $secondaryColor;
+	
+	width: 65vw;
+	
+	position: relative;
+	
+	.CloseButton {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		
+		cursor: pointer;
+		transition: color $ft;
+		
+		z-index: 10;
+		
+		&:Hover {
+			color: white;
+		}
+	}
+	
+	* {
+		box-sizing: border-box;
+	}
+	
+	.HelpSection {
+		> * {
+			padding: 30px;
+		}
+		
+		.Title {
+			font-weight: bolder;
+			font-size: 1.5em;
+			
+			color: $secondaryColor;
+			padding-bottom: 0;
+		}
+		
+		margin-right: auto;
+	}
+	
+	.Flex {
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.MainSection {
+		position: relative;
+		
+		> div {
+			flex-shrink: 0;
+			flex-grow: 1;
+			width: 50%;
+		}
+		
+		.Fields {
+			margin-left: auto;
+		}
+		
+		.FieldContainer {
+			position: relative;
+			
+			.Title {
+				margin-top: 10px;
+				font-weight: bolder;
+			}
+			
+			input {
+				border: none;
+				outline: none;
+				
+				margin-top: 20px;
+				
+				color: white;
+				background-color: transparent;
+				padding: 7px;
+				
+				width: 90%;
+				
+				border-bottom: 2px solid var(--txt-color);
+				
+				&::Placeholder {
+					color: var(--txt-color);
+				}
+			}
+		}
+	}
+	
+	.Button {
+		padding: 10px;
+		margin: 10px;
+		
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
+		> svg {
+			margin-right: 7px;
+		}
+		
+		transition: background-color $ft, color $ft;
+		cursor: pointer;
+		
+		&:Hover {
+			background-color: $secondaryColor;
+			color: white;
+		}
+	}
+}

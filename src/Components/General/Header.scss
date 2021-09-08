@@ -1,0 +1,62 @@
+﻿@import "../../Variables";
+
+.Header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  padding: 20px;
+  margin: 0 20px;
+  
+  position: relative;
+  
+  .NavigationButtons {
+    display: flex;
+    margin-top: 10px;
+    
+    .Left, .Right {
+      display: flex;
+    }
+    
+    .Right {
+      margin-left: auto;
+    }
+
+    .Button {
+      display: flex;
+      align-items: center;
+
+      padding: 7px;
+
+      cursor: pointer;
+      transition: color $ft, background-color $ft;
+
+      &:Hover {
+        color: white;
+        background-color: $primaryColor;
+      }
+
+      &.Disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+  
+  .SearchFieldContainer {
+    width: 600px;
+    
+    z-index: 2;
+  }
+  
+  > svg {
+    margin-right: 15px;
+    
+    cursor: pointer;
+    transition: color $ft;
+    
+    &:Hover {
+      color: white;
+    }
+  }
+}

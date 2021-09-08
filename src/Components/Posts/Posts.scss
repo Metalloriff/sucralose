@@ -1,0 +1,94 @@
+﻿@import "../../Variables";
+
+.Posts {
+  .PageLabel {
+    text-transform: uppercase;
+    text-align: center;
+  }
+  
+  .NoPosts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    
+    max-width: 90vw;
+    margin: auto;
+    margin-top: 25vh;
+    
+    h2 {
+      color: $primaryColor;
+    }
+    
+    > svg {
+      width: 80px;
+      height: 80px;
+      
+      margin-top: 30px;
+    }
+  }
+  
+  .Items {
+    padding: 40px;
+    gap: 40px;
+
+    display: grid;
+    grid-template-columns: repeat(var(--post-column-count), 1fr);
+    grid-auto-flow: dense;
+
+    align-content: center;
+    justify-content: center;
+  }
+}
+
+.FetchingStateModal {
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(black, 0.5);
+  z-index: 1000;
+
+  opacity: 0;
+  transition: opacity $ft;
+  pointer-events: none;
+
+  &.Active {
+    opacity: 1;
+    pointer-events: all;
+
+    > * {
+      transform: scale(1);
+    }
+  }
+
+  > * {
+    background-color: $primaryBG;
+    padding: 30px 50px;
+    border-radius: $secondaryBorderRadius;
+
+    transform: scale(0.5);
+    transition: transform $ft;
+
+    font-size: 1.25em;
+  }
+}
+
+#root .Items {
+  @media screen and (max-width: 1300px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @media screen and (max-width: 950px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media screen and (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+}

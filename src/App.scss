@@ -1,0 +1,163 @@
+@import "./Variables.scss";
+
+:root {
+	--primary-color: #7bb1bd;
+	--secondary-color: #BD7BA2;
+	
+	--primary-bg: #2c3946;
+	--secondary-bg: #364758;
+	--tertiary-bg: #42566a;
+	
+	--primary-border-radius: 4px;
+	--secondary-border-radius: 7px;
+	
+	--red: #be7d7d;
+	--orange: #bd987e;
+	--yellow: #c5c387;
+	--green: #7bbe92;
+	--blue: #7cb2bd;
+	--purple: #9a88bf;
+	--pink: #be7aa1;
+	
+	--txt-color: #c3ccd4;
+	
+	--post-column-count: 4;
+}
+
+html {
+	background-color: $primaryBG;
+	color: white;
+
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	overflow-x: hidden;
+}
+
+body {
+	font-family: Verdana, sans-serif;
+
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	margin: 0;
+	color: var(--txt-color);
+}
+
+// I hate Firefox
+* {
+	scrollbar-width: thin;
+	scrollbar-color: $primaryColor rgba(black, 0.1);
+}
+
+.App, .Main {
+	min-height: 100vh;
+}
+
+.MainPage {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+::-webkit-scrollbar {
+	background: rgba(black, 0.1);
+	width: 5px;
+	height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: $primaryColor;
+	border-radius: $primaryBorderRadius;
+}
+
+footer {
+	background-color: $secondaryBG;
+	
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	padding: 10px;
+	
+	box-shadow: 0 0 15px rgba(black, 0.1);
+	
+	> .Divider {
+		width: 2px;
+		height: 1.5em;
+		
+		border-radius: 2px;
+		margin: 0 10px;
+		
+		background-color: $primaryHover;
+	}
+}
+
+a {
+	color: $primaryColor;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+#root .Mobile footer {
+	flex-direction: column;
+	
+	.Divider {
+		display: none;
+	}
+	
+	> * {
+		margin: 10px 0;
+	}
+}
+
+.Flex {
+	display: flex;
+}
+
+.Spinner {
+	animation-name: spinner;
+	animation-duration: 1.5s;
+	animation-timing-function: steps(60);
+	animation-iteration-count: infinite;
+}
+
+@keyframes spinner {
+	from { transform: rotateZ(0deg); }
+	to { transform: rotateZ(360deg); }
+}
+
+#root input[type="range"] {
+	appearance: none;
+	border: none;
+	outline: none;
+	
+	background-color: $secondaryBG;
+	
+	height: 7px;
+	padding: 0;
+	
+	border-radius: 100px;
+	
+	&::-webkit-slider-thumb {
+		appearance: none;
+
+		background-color: $primaryColor;
+		width: 20px;
+		height: 20px;
+		border-radius: 100px;
+		cursor: pointer;
+	}
+}
+
+.AppBackground {
+	position: fixed;
+	top: 0; left: 0; bottom: 0; right: 0;
+	
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	
+	z-index: -10;
+	opacity: 0;
+	
+	transition: opacity $t;
+}

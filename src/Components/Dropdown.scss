@@ -1,0 +1,54 @@
+@import "../Variables.scss";
+
+.Dropdown {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	position: relative;
+
+	color: black;
+
+	overflow: hidden;
+	max-height: 42px;
+
+	.DropdownItem {
+		padding: 5px;
+		line-height: 200%;
+		
+		cursor: pointer;
+		background-color: white;
+
+		&:first-child {
+			border-radius: 5px;
+		}
+
+		&:not(.Selected) {
+			z-index: 10;
+
+			transition: background-color $ft, color $ft;
+
+			&:hover {
+				background-color: $primaryColor;
+				color: white;
+			}
+		}
+
+		&.Grayed {
+			color: darken(white, 50%);
+		}
+	}
+
+	&.Open {
+		overflow: visible;
+
+		:first-child {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		:last-child {
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+	}
+}

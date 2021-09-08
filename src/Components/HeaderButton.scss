@@ -1,0 +1,82 @@
+@import "../Variables.scss";
+
+.HeaderButtons {
+	$containerSize: 40px;
+	$itemSize: 30px;
+
+	margin-left: 10px;
+
+	.Container {
+		display: inline-block;
+		cursor: pointer;
+
+		position: relative;
+		width: $containerSize;
+		height: $containerSize;
+	
+		margin: 5px;
+		padding: 5px;
+
+		.Button {
+			display: inline-block;
+			pointer-events: none;
+			overflow: hidden;
+	
+			position: absolute;
+			left: 0;
+			width: $containerSize;
+			height: $containerSize;
+
+			border-radius: 5px;
+			padding-bottom: 5px;
+	
+			transition: width $t, background-color $t;
+
+			.Content {
+				position: absolute;
+
+				left: ($itemSize + 5);
+				right: 0;
+				width: 250px;
+
+				color: transparent;
+				line-height: 5px;
+
+				margin-right: 50px;
+				display: inline;
+				border: 20px solid transparent;
+		
+				transition: color $t;
+			}
+
+			.Icon {
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				width: $itemSize;
+				filter: invert(100%);
+		
+				transition: transform $t, filter $t;
+			}
+		}
+
+		&:hover {
+			.Button {
+				width: 250px;
+				background-color: white;
+	
+				.Content
+				{
+					color: black;
+					width: 250px;
+				}
+				
+				.Icon
+				{
+					transform: scale(1.2);
+					filter: none;
+				}
+			}
+		}
+	}
+}

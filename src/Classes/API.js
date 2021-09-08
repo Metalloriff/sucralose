@@ -1,0 +1,140 @@
+﻿import App from "../App";
+import Toasts from "../Components/Toasts";
+
+export default new class E621API {
+    endpoint = "https://e621.net/";
+    
+    get loginData() {
+        return {
+            login: App.userData.username,
+            api_key: App.userData.apiKey
+        };
+    }
+
+    /**
+     * Gets a request-able URL to the E621 API endpoint.
+     * @param sub {string} The page to request.
+     * @param args The arguments to pass to the request as a string.
+     * @param json {boolean} Whether to request from the json endpoint.
+     * @returns {string} An endpoint URL.
+     */
+    getEndpoint(sub, args = {}, json = true) {
+        // Get the stored login data.
+        let login = this.loginData;
+        // If the login or api key is null, then clean the login object.
+        if (!login.login || !login.api_key) login = {};
+        
+        // Create the request params object.
+        const params = new URLSearchParams({
+            ...login,
+            ...args,
+            _client: "Sucralose/2.0 by Metalloriff"
+        });
+        
+        // Return the request string.
+        return `${this.endpoint}${sub}${json ? ".json?" : "?"}${params}`;
+    }
+    
+    /**
+     * Make a request to the E621 API endpoint.
+     * @param sub {string} The page to request from the E621 API endpoint.
+     * @param args The arguments to pass to the request as a string.
+     * @param json {boolean} Whether to request from the json endpoint.
+     * @param restOptions The options argument to pass to the fetch request.
+     * @returns {Promise<any>} A promise that resolves when the request has been made.
+     */
+    async request(sub, args = {}, json = true, restOptions = {}) {
+        // Rate limit for requests made.
+        while (Date.now() - this.lastMadeRequest < 500)
+            await new Promise(r => setTimeout(r, 100));
+        // Set the last made request to the current time.
+        this.lastMadeRequest = Date.now();
+        
+        // Return the response object.
+        return await fetch(this.getEndpoint(sub, args, json), restOptions)
+            .then(response => json ? response.json() : response);
+    }
+
+    /**
+     * The last time a request was made to the E621 API endpoint.
+     * @type {number}
+     */
+    lastMadeRequest = -500;
+
+    #voting = { };
+
+    /**
+     * Handles voting/un-voting on a post.
+     * @param postId {number} The ID of the post.
+     * @param score {number | "-1" | "1"} The score to assign to the post.
+     * @returns {Promise<*>}
+     */
+    async vote(postId, score) {
+        // If the user is not signed in, throw an error and return.
+        if (!App.userData.username || !App.userData.apiKey)
+            return Toasts.showToast("You must be logged in to favorite posts", "Failure");
+        
+        // If we're already trying to vote on this post, throw an error and return.
+        if (this.#voting[postId])
+            return Toasts.showToast("You're attempting to vote too quickly", "Failure");
+        this.#voting[postId] = true;
+        
+        // Make the request to the E621 API.
+        return await this.request(
+            `posts/${postId}/votes`,
+            { score, no_unvote: false },
+            true,
+            { method: "POST" }
+        ).then(r => (delete this.#voting[postId], r));
+    }
+    
+    #favoriting = { };
+
+    /**
+     * Handles adding a post to the user's favorites.
+     * @param postId {number} The ID of the post to add.
+     * @returns {Promise<*>}
+     */
+    async favorite(postId) {
+        // If the user is not signed in, throw an error and return.
+        if (!App.userData.username || !App.userData.apiKey)
+            return Toasts.showToast("You must be logged in to favorite posts", "Failure");
+        
+        // If we're already trying to favorite this post, throw an error and return.
+        if (this.#favoriting[postId])
+            return Toasts.showToast("You're attempting to favorite too quickly", "Failure");
+        this.#favoriting[postId] = true;
+        
+        // Make the request to the E621 API.
+        return await this.request(
+            "favorites",
+            { post_id: postId },
+            true,
+            { method: "POST" }
+        ).then(r => (delete this.#favoriting[postId], r));
+    }
+
+    /**
+     * Handles deleting a post from the user's favorites.
+     * @param postId {number} The ID of the post to remove.
+     * @returns {Promise<*>}
+     */
+    async removeFavorite(postId) {
+        // If the user is not signed in, throw an error and return.
+        if (!App.userData.username || !App.userData.apiKey)
+            return Toasts.showToast("You must be logged in to favorite posts!");
+
+        // If we're already trying to favorite this post, throw an error and return.
+        if (this.#favoriting[postId])
+            return Toasts.showToast("You're attempting to favorite too quickly", "Failure");
+        this.#favoriting[postId] = true;
+        
+        // Make the request to the E621 API.
+        return await this.request(
+            `favorites/${postId}.json`,
+            { },
+            false,
+            { method: "DELETE" }
+        ).then(r => (delete this.#favoriting[postId], r));
+    }
+}

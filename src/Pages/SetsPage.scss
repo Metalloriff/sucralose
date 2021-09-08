@@ -1,0 +1,67 @@
+﻿@import "../Variables";
+
+.SetsPage {
+	.NoSets {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+
+		text-align: center;
+
+		max-width: 90vw;
+		margin: auto;
+		margin-top: 25vh;
+
+		h2 {
+			color: $primaryColor;
+		}
+
+		> svg {
+			width: 80px;
+			height: 80px;
+
+			margin-top: 30px;
+		}
+	}
+	
+	.Items {
+		width: 800px;
+		max-width: 80vw;
+		
+		margin: 0 auto;
+		
+		.PostSet {
+			background-color: rgba(black, 0.2);
+			
+			margin-bottom: 20px;
+			padding: 10px;
+			
+			.Head {
+				display: flex;
+				
+				.Title {
+					font-weight: bolder;
+					color: $primaryColor;
+				}
+				
+				.ShortName {
+					margin-left: auto;
+					user-select: text;
+				}
+			}
+			
+			.Description {
+				margin-top: 10px;
+			}
+			
+			transition: transform $ft, box-shadow $ft;
+			cursor: pointer;
+			
+			&:Hover {
+				transform: scale(1.01);
+				box-shadow: 0 0 12px rgba(black, 0.25);
+			}
+		}
+	}
+}

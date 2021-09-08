@@ -1,0 +1,14 @@
+#root .LazyScroller {
+  > :Not(.LazyRendered) {
+    visibility: hidden;
+    animation: none;
+    transition: none;
+
+    background: none;
+    color: white;
+
+    .AvatarSquare, .AvatarCircle {
+      display: none;
+    }
+  }
+}

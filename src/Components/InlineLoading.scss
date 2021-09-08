@@ -1,0 +1,33 @@
+.InlineLoadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  > .Dot {
+    background-color: currentColor;
+    border-radius: 100%;
+    opacity: 0.5;
+
+    width: 0.5em;
+    height: 0.5em;
+    margin: 0.25em;
+    
+    will-change: transform, opacity;
+
+    animation-name: LoadingDotAnimation;
+    animation-duration: 750ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-out;
+
+    &.A { animation-delay: 0.25s; }
+    &.B { animation-delay: 0.50s; }
+    &.C { animation-delay: 0.75s; }
+  }
+}
+
+@keyframes LoadingDotAnimation {
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}

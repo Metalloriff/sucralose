@@ -1,0 +1,113 @@
+﻿@import "../../Variables";
+
+.SearchFieldContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  padding: 5px;
+  position: relative;
+  
+  border-bottom: 2px solid var(--txt-color);
+  
+  transition: border-color $ft;
+  
+  &.Focused {
+    border-color: $primaryColor;
+    
+    &, .SearchField, .SearchField::placeholder {
+      color: white;
+    }
+    
+    &:After {
+      right: 0;
+      background-color: $secondaryBG;
+    }
+    
+    .AutoCompleteContainer {
+      display: block;
+    }
+  }
+  
+  &::After {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 100%; bottom: 0;
+    
+    pointer-events: none;
+    z-index: -1;
+    
+    //background-color: white;
+    
+    transition: right $ft, background-color $ft;
+  }
+  
+  .SearchField {
+    border: 2px solid transparent;
+    outline: none;
+    
+    background: none !important;
+    appearance: none !important;
+    padding: 7px;
+    border-radius: $primaryBorderRadius;
+    
+    color: var(--txt-color);
+    transition: color $ft;
+    
+    flex-grow: 1;
+    height: 100%;
+    
+    &::placeholder {
+      color: var(--txt-color);
+      transition: color $ft;
+    }
+  }
+  
+  .Button {
+    transition: color $ft;
+    padding-right: 5px;
+    
+    cursor: pointer;
+  }
+  
+  .AutoCompleteContainer {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    
+    color: darken(white, 10%);
+    display: none;
+    
+    z-index: 100;
+    
+    .AutoCompleteEntry {
+      background-color: $tertiaryBG;
+      
+      display: flex;
+      align-items: center;
+      
+      .IconContainer {
+        padding: 5px;
+        margin-right: 5px;
+      }
+      
+      .PostCount {
+        margin-left: auto;
+        margin-right: 10px;
+
+        color: var(--txt-color);
+        white-space: nowrap;
+      }
+      
+      transition: transform $ft, background-color $ft;
+      
+      &:Hover {
+        transform: scale(1.015);
+        background-color: $primaryColor;
+      }
+    }
+  }
+}
+
+#root .Mobile .SearchFieldContainer {
+  width: 80vw;
+}

@@ -1,0 +1,29 @@
+﻿@import "../Variables";
+
+.ErrorBoundaryHandler {
+  .ErrorBoundaryFooter {
+    display: flex;
+    flex-direction: row;
+    
+    .ErrorBoundaryButton {
+      padding: 10px 15px;
+      border-radius: $primaryBorderRadius;
+      margin-right: 15px;
+
+      cursor: pointer;
+    }
+  }
+}
+
+.ErrorInfoModal {
+  width: 85vw;
+  height: 85vh;
+  
+  padding: 20px;
+  border-radius: $primaryBorderRadius;
+  
+  h2 {
+    margin-left: 20px;
+    opacity: 0.8;
+  }
+}

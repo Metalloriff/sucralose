@@ -1,0 +1,55 @@
+@import "../Variables.scss";
+
+.TabsList {
+	display: flex;
+	justify-content: center;
+
+	.TabItem {
+		width: 5vw;
+
+		padding: 20px;
+		padding-top: 10px;
+		margin: 10px;
+
+		position: relative;
+		cursor: pointer;
+
+		display: flex;
+		justify-content: center;
+		align-content: center;
+
+		.TabItemTitle {
+			transition: color $t;
+		}
+
+		.TabItemBorder {
+			margin-top: 10px;
+			border-bottom: 2px solid white;
+
+			position: absolute;
+			bottom: 5px;
+
+			width: 20%;
+			transition: width $t, border-bottom-color $t;
+		}
+
+		&.Active {
+			color: $primaryColor;
+
+			.TabItemBorder {
+				width: 100%;
+				border-bottom-color: $primaryColor;
+			}
+		}
+
+		&:hover {
+			.TabItemBorder {
+				width: 100%;
+			}
+		}
+	}
+}
+
+.Mobile .TabsList .TabItem {
+	width: 150px;
+}

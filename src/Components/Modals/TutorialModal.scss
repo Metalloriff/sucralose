@@ -1,0 +1,50 @@
+﻿@import "../../Variables";
+
+.TutorialModal {
+	padding: 10px;
+	background-color: $primaryBG;
+	
+	width: 800px;
+	max-width: 90vw;
+	
+	border-top: 5px solid $secondaryColor;
+	
+	.ModalHeader {
+		display: flex;
+		
+		h2 {
+			margin-top: 0;
+			color: $secondaryColor;
+		}
+		
+		svg {
+			width: 28px;
+			height: 28px;
+			
+			margin-left: auto;
+			
+			cursor: pointer;
+			transition: color $ft;
+			
+			&:Hover {
+				color: white;
+			}
+		}
+	}
+	
+	.ModalBody {
+		overflow-x: hidden;
+		overflow-y: auto;
+		
+		max-height: 70vh;
+		
+		&::-webkit-scrollbar-thumb {
+			background-color: $secondaryColor;
+		}
+		
+		img {
+			display: block;
+			margin: 10px 0;
+		}
+	}
+}

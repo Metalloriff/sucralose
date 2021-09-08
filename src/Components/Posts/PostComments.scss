@@ -1,0 +1,81 @@
+﻿@import "../../Variables";
+
+.PostComments {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	
+	.NoComments {
+		position: relative;
+		
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		
+		.Kermit {
+			color: var(--txt-color);
+			opacity: 0.3;
+			
+			width: 400px;
+			height: 400px;
+		}
+	}
+	
+	.Comments {
+		width: 900px;
+		max-width: 100vw;
+	}
+	
+	.Comment {
+		display: flex;
+		padding: 50px;
+		
+		.UserSection {
+			.AvatarContainer {
+				position: relative;
+				overflow: hidden;
+				
+				width: 150px;
+				height: 150px;
+				
+				.Avatar {
+					width: 100%;
+					height: 100%;
+					
+					object-fit: cover;
+					cursor: pointer;
+					
+					&.NSFW {
+						filter: blur(10px);
+						transform: scale(1.3);
+					}
+					
+					transition: transform $ft, filter $ft;
+					
+					&:Hover {
+						transform: scale(1.025);
+						filter: none;
+					}
+				}
+			}
+		}
+		
+		.BodySection {
+			margin-left: 20px;
+			
+			.Username {
+				color: $primaryColor;
+				font-weight: bolder;
+				cursor: pointer;
+			}
+		}
+	}
+}
+
+#root .Mobile .PostComments {
+	.AvatarContainer {
+		width: 100px;
+		height: 100px;
+	}
+}
