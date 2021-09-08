@@ -3,8 +3,10 @@ import "./AuthModal.scss";
 import * as Feather from "react-feather";
 import { Modals } from "../Modals";
 import Toasts from "../Toasts";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import Database from "../../Classes/Database";
+
+// TODO add password reset functionality.
 
 export default function AuthModal() {
     const [signUpMode, setSignUpMode] = React.useState(false);
@@ -34,7 +36,7 @@ export default function AuthModal() {
             
             // Create the user account.
             createUserWithEmailAndPassword(Database.auth, emailField.value, passwordField.value)
-                // Then reload the page because I'm lazy.
+                // Then navigate to the settings.
                 .then(() => (Modals.pop(), Toasts.showToast("Welcome to Sucralose!", "Success"), window.location.hash = "#settings"))
                 // Catch any errors that may have occurred.
                 .catch(e => {
@@ -48,9 +50,34 @@ export default function AuthModal() {
             // Get the input fields.
             const [emailField, passwordField] = ref.current.getElementsByTagName("input");
             
+            // Set the busy state so users don't spam the API.
             setBusy(true);
             
-            
+            // Attempt to log in.
+            signInWithEmailAndPassword(Database.auth, emailField.value, passwordField.value)
+                // Then reload the page because I'm lazy.
+                .then(() => (Modals.pop(), window.location.reload()))
+                // Catch any errors that may have occurred.
+                .catch(e => {
+                    let message = "Unknown";
+                    
+                    switch (e.code) {
+                        case "auth/invalid-email":
+                            message = "Invalid email address";
+                            break;
+                            
+                        case "auth/user-not-found":
+                            message = "No user with this email found";
+                            break;
+                            
+                        case "auth/wrong-password":
+                            message = "Incorrect password";
+                            break;
+                    }
+                    
+                    Toasts.showToast(`Failed to sign in! Reason - ${message}`, "Failure", 10);
+                    console.error(e);
+                });
         }
     };
     

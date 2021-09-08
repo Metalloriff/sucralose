@@ -4,7 +4,8 @@
 	background-color: $primaryBG;
 	border-top: 10px solid $secondaryColor;
 	
-	width: 65vw;
+	width: 900px;
+	max-width: 100vw;
 	
 	position: relative;
 	
@@ -108,6 +109,21 @@
 		&:Hover {
 			background-color: $secondaryColor;
 			color: white;
+		}
+	}
+}
+
+#root .Mobile .AuthModal {
+	.MainSection {
+		flex-direction: column;
+		
+		> * {
+			width: 100%;
+		}
+		
+		.Fields {
+			padding: 30px;
+			padding-right: 0;
 		}
 	}
 }
