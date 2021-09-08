@@ -6,6 +6,7 @@ import SearchField from "../General/SearchField";
 import Database from "../../Classes/Database";
 import Toasts from "../Toasts";
 import App from "../../App";
+import LinkWrapper from "../LinkWrapper";
 
 /* TODO
     
@@ -15,10 +16,11 @@ import App from "../../App";
 
 export default function TagItem({ children }) {
     return (
-        <ContextMenu.Wrapper menu={<TagItemContextMenu tag={children}/>}>
-            <div className="TagItem" onClick={() => SearchField.handleSearch(children)}>
+        <ContextMenu.Wrapper menu={<TagItemContextMenu tag={children}/>} wrapperClassName="TagItemContextMenuWrapper">
+            <LinkWrapper className="TagItem" onClick={() => SearchField.handleSearch(children)}
+                         href={`?search=${children}#posts`}>
                 {children}
-            </div>
+            </LinkWrapper>
         </ContextMenu.Wrapper>
     )
 }

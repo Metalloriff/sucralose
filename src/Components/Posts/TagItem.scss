@@ -4,3 +4,9 @@
 	color: $primaryColor;
 	cursor: pointer;
 }
+
+#root .TagItemContextMenuWrapper {
+	display: inline-block;
+	
+	width: max-content;
+}

@@ -31,20 +31,51 @@ import TutorialModal from "./Components/Modals/TutorialModal";
 
  */
 
+// Ugh.
 let lastSearch = QueryManager.get("search") ?? "";
+let lastModalState = QueryManager.get("modalState");
+export let lastHistoryPop = Date.now();
 window.addEventListener("popstate", () => {
+	// Get the current search state.
 	const search = QueryManager.get("search") ?? "";
+	// If the search states do not match, handle page update.
 	if (lastSearch !== search && document.getElementById("searchField")) {
+		// Clear all post states.
 		Posts.instance?.setPosts([]);
 		SetsList.instances?.forEach(instance => instance.setSets([ ]));
+		// Set the search field value to the search.
 		document.getElementById("searchField").value = search;
 
+		// Set the last search state to the current search state.
 		lastSearch = search;
 	}
 	
-	App.forceUpdate?.();
-	Posts.instance?.setFetchingState(true);
-	SetsList.instances?.forEach(instance => instance.setFetchingState(true));
+	// Get the current modal state.
+	const modalState = QueryManager.get("modalState");
+	// If the modal states do not match, handle the modal state update.
+	if (lastModalState !== modalState) {
+		// If the modal state is closed, close the modal.
+		!modalState && Modals.pop();
+		
+		// Set the last modal state to the current modal state.
+		lastModalState = modalState;
+	}
+	// Otherwise, handle updating the page.
+	else {
+		// Gonna be honest, I don't remember what the fuck this does.
+		if (modalState && lastModalState && Modals.instance.state.stack.length)
+			QueryManager.set("modalState", null);
+		
+		// Set the fetching states of the posts and sets.
+		Posts.instance?.setFetchingState(true);
+		SetsList.instances?.forEach(instance => instance.setFetchingState(true));
+
+		// Force update the app.
+		App.forceUpdate?.();
+	}
+	
+	// Set the last pop state time to now.
+	lastHistoryPop = Date.now();
 });
 
 function PageElement() {

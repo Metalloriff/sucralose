@@ -60,5 +60,17 @@ export function useEventListener(eventType, callback, options = {}) {
     }, dependencies);
 }
 
+export function useOnMount(callback) {
+    React.useEffect(() => {
+        callback();
+    }, []);
+}
+
+export function useOnUnmount(callback) {
+    React.useEffect(() => {
+        return callback;
+    }, []);
+}
+
 // Sucralose-specific hooks
 

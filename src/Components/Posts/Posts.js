@@ -24,7 +24,7 @@ export default function Posts({ search: additionalTags, emptyPlaceholder = null,
     
     React.useEffect(() => {
         const query = new URLSearchParams(window.location.search);
-        const page = query.get("page") || 1;
+        const page = parseInt(query.get("page") || 1);
         const tags = [
             document.getElementById("searchField")?.value,
             additionalTags,
@@ -43,9 +43,16 @@ export default function Posts({ search: additionalTags, emptyPlaceholder = null,
                     { tags, page }
                 ])
             ).then(data => {
+                // This entire function should be abolished.
+                
                 setFetchingState(false);
                 
-                // This entire function should be abolished.
+                if (page > 1 && !data.posts.length) {
+                    QueryManager.set("page", page - 1, {
+                        pushHistory: false
+                    });
+                }
+                
                 const _posts =
                     tags === search &&  window.location.hash === hash && !request
                         ? [...posts, ...data.posts]

@@ -15,7 +15,7 @@
         } = options;
         
         const query = new URLSearchParams(window.location.search);
-        query.set(key, value);
+        value === null ? query.delete(key) : query.set(key, value);
         
         const url = window.location.href.replace(
             window.location.search,

@@ -7,7 +7,9 @@ import { joinClassNames } from "../Classes/Constants";
 import Tooltip from "./Tooltip";
 import LinkWrapper from "./LinkWrapper";
 import * as Feather from "react-feather";
-import { useEventListener } from "../Classes/Hooks";
+import { useEventListener, useOnMount } from "../Classes/Hooks";
+import QueryManager from "../Classes/QueryManager";
+import { lastHistoryPop } from "../App";
 
 /**
  * Pushes a component to the modal stack.
@@ -61,6 +63,13 @@ export function ImageModal({ url, getSources, buttons }) {
 		
 		_setIndex(index);
 	}
+	
+	// Handle the modal state query.
+	React.useEffect(() => {
+		QueryManager.set("modalState", "open");
+		
+		return () => Date.now() - lastHistoryPop > 500 && window.history.back();
+	}, []);
 	
 	// Create a navigate function to handle safely navigating images
 	const nav = dir =>
