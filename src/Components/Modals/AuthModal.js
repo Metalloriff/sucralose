@@ -41,6 +41,16 @@ export default function AuthModal() {
                     Toasts.showToast("An unknown error has occured! Check console for details", "Failure");
                     console.error(e);
                 });
+        },
+        handleLogIn: () => {
+            if (busy) return;
+
+            // Get the input fields.
+            const [emailField, passwordField] = ref.current.getElementsByTagName("input");
+            
+            setBusy(true);
+            
+            
         }
     };
     
@@ -129,7 +139,7 @@ export default function AuthModal() {
                             <div>Reset Password</div>
                         </div>
                         
-                        <div className="Button">
+                        <div className="Button" onClick={events.handleLogIn}>
                             <Feather.LogIn/>
                             <div>Log In</div>
                         </div>
