@@ -80,6 +80,17 @@
 			backdrop-filter: blur(5px);
 		}
 	}
+	
+	.UseAModernWebBrowserThatActuallySupportsBackdropFilterAndOtherFeaturesFromMoreThan5YearsAgo {
+		color: var(--cf-red);
+		text-align: center;
+		
+		margin-top: 50px;
+		
+		a:Not(:First-Child) {
+			margin-left: 10px;
+		}
+	}
 }
 
 #root .Mobile .MainPage {

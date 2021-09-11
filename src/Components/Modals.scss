@@ -108,6 +108,20 @@
 			height: 100%;
 
 			object-fit: contain;
+			
+			&.Previous, &.Next {
+				position: absolute;
+				
+				filter: brightness(0.4);
+			}
+			
+			&.Previous {
+				transform: translateX(-100%) scale(0.8);
+			}
+			
+			&.Next {
+				transform: scale(0.8);
+			}
 		}
 		
 		video {

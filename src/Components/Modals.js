@@ -3,7 +3,7 @@ import "./Modals.scss";
 import ErrorBoundary from "./ErrorBoundary";
 import Toasts from "./Toasts";
 import InlineLoading from "./InlineLoading";
-import { joinClassNames } from "../Classes/Constants";
+import { getRandomKey, joinClassNames } from "../Classes/Constants";
 import Tooltip from "./Tooltip";
 import LinkWrapper from "./LinkWrapper";
 import * as Feather from "react-feather";
@@ -46,6 +46,28 @@ export async function copyToClipboard(text) {
 			value: text
 		});
 	}
+}
+
+function ImageComponent({ image, setLoaded, setFailed, className }) {
+	const [loaded, _setLoaded] = React.useState(false);
+	
+	const events = {
+		onLoad: () => (setLoaded?.(true), setFailed?.(false), _setLoaded(true)),
+		onError: () => (setLoaded?.(true), setFailed?.(true), _setLoaded(true))
+	};
+	
+	if (!image) return null;
+	
+	return /\.webm$/.test(image.full)
+		? <video src={image.full} controls loop {...events}/> : (
+			<>
+				<img src={image.preview} alt="Preview failed to load"
+					 style={{ display: loaded && !className ? "none" : null }} className={className}/>
+	
+				{ !className && <img src={image.full} alt="Image failed to load" className={className}
+									 style={{ display: loaded ? null : "none" }} {...events}/> }
+			</>
+		);
 }
 
 // TODO update this
@@ -96,21 +118,30 @@ export function ImageModal({ url, getSources, buttons }) {
 	return (
 		<div className="ImageModal" onClick={e => e.target === e.currentTarget && Modals.pop()}>
 			<div className={joinClassNames("ImageContainer", [expanded, "Expanded"])}>
-				{ /\.webm$/.test(sources[index].full) ? (
-					<video src={sources[index].full} controls loop
-						   onLoad={() => (setLoaded(true), setFailed(false))}
-						   onError={() => (setLoaded(true), setFailed(true))}/>
-				) : (
-					<>
-						<img src={sources[index].preview} alt="Preview failed to load"
-							 style={{ display: loaded ? "none" : null }}/>
-						
-						<img src={sources[index].full} alt="Image failed to load"
-							 style={{ display: loaded ? null : "none" }}
-							 onLoad={() => (setLoaded(true), setFailed(false))}
-							 onError={() => (setLoaded(true), setFailed(true))}/>
-					</>
-				) }
+				<ImageComponent
+					key={getRandomKey()}
+					image={sources[index - 1]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+					
+					className="Previous"
+				/>
+				
+				<ImageComponent
+					key={getRandomKey()}
+					image={sources[index]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+				/>
+				
+				<ImageComponent
+					key={getRandomKey()}
+					image={sources[index + 1]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+					
+					className="Next"
+				/>
 			</div>
 			
 			<div className="Footer">
@@ -122,7 +153,7 @@ export function ImageModal({ url, getSources, buttons }) {
 
 				<div className="Divider"/>
 				
-				{ buttons ?? (
+				{ buttons?.(index) ?? (
 					<>
 						<div className="Button" onClick={() => (setExpandedState(!expanded))}>
 							{ expanded ? <Feather.Minimize/> : <Feather.Maximize/> }

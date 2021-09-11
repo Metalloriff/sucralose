@@ -13,6 +13,7 @@ import ContextMenu from "../ContextMenuHandler";
 import Toasts from "../Toasts";
 import App from "../../App";
 import { Settings, SettingsRenderer } from "../../Pages/SettingsPage";
+import LinkWrapper from "../LinkWrapper";
 
 /**
  * The generic post component.
@@ -158,7 +159,7 @@ export default function Post({ post }) {
                                  preview: post.sample?.url ?? post.preview?.url ?? post.file?.url,
                                  full: post.file.url
                              })), {
-                             buttons: <PostModalButtons post={post}/>
+                             buttons: index => <PostModalButtons post={Posts.instance.posts[index]}/>
                          })}/>
             </ContextMenu.Wrapper>
             
@@ -207,10 +208,11 @@ export default function Post({ post }) {
                         <Feather.Download/>
                     </Button>
                     
-                    <Button tooltipText="Open in new tab" tooltipSide="right"
-                            onClick={events.openInNewTab}>
-                        <Feather.ExternalLink/>
-                    </Button>
+                    <LinkWrapper href={`#post/${id}`}>
+                        <Button tooltipText="View Post" tooltipSide="right">
+                            <Feather.ExternalLink/>
+                        </Button>
+                    </LinkWrapper>
                 </div>
             </div>
         </div>

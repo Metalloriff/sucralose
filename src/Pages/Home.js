@@ -153,6 +153,30 @@ export default function Home() {
 			
 			<NavigationButtonsComponent/>
 			
+			{ window.navigator.userAgent.indexOf("Firefox") !== -1 && (
+				<div className="UseAModernWebBrowserThatActuallySupportsBackdropFilterAndOtherFeaturesFromMoreThan5YearsAgo">
+					<h2>WARNING</h2>
+					
+					<div>You're on an unsupported web browser.</div>
+					<div>You will likely experience visual and functional errors.</div>
+					<div>Please do not report these while on an unsupported browser.</div>
+					
+					<br/>
+					
+					<div>Most modern Chromium-based browsers are supported.</div>
+					
+					<br/>
+					
+					<div style={{ color: "var(--txt-color)" }}>
+						<a href="https://www.google.com/chrome/">Chrome</a>,
+						<a href="https://www.opera.com/download">Opera</a>,
+						<a href="https://www.opera.com/gx">Opera GX</a>,
+						<a href="https://brave.com/download/">Brave</a>,
+						<a href="https://www.microsoft.com/en-us/edge">Literally Edge</a>
+					</div>
+				</div>
+			) }
+			
 			<div className="News" onClick={() => Modals.push(news.modal())}>
 				<h3 className="Title">{news.title}</h3>
 				

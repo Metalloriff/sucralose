@@ -72,7 +72,7 @@ export default new class E621API {
     async vote(postId, score) {
         // If the user is not signed in, throw an error and return.
         if (!App.userData.username || !App.userData.apiKey)
-            return Toasts.showToast("You must be logged in to favorite posts", "Failure");
+            return Toasts.showToast("You must be logged into e621 to favorite posts", "Failure");
         
         // If we're already trying to vote on this post, throw an error and return.
         if (this.#voting[postId])
@@ -98,7 +98,7 @@ export default new class E621API {
     async favorite(postId) {
         // If the user is not signed in, throw an error and return.
         if (!App.userData.username || !App.userData.apiKey)
-            return Toasts.showToast("You must be logged in to favorite posts", "Failure");
+            return Toasts.showToast("You must be logged into e621 to favorite posts", "Failure");
         
         // If we're already trying to favorite this post, throw an error and return.
         if (this.#favoriting[postId])
@@ -122,7 +122,7 @@ export default new class E621API {
     async removeFavorite(postId) {
         // If the user is not signed in, throw an error and return.
         if (!App.userData.username || !App.userData.apiKey)
-            return Toasts.showToast("You must be logged in to favorite posts!");
+            return Toasts.showToast("You must be logged into e621 to favorite posts!");
 
         // If we're already trying to favorite this post, throw an error and return.
         if (this.#favoriting[postId])
