@@ -9,7 +9,14 @@ function formatDate(date) {
 }
 
 export default function PopularPostsPage() {
-    const [date, setDate] = React.useState(formatDate(new Date()));
+    const wtf = new Date();
+    const [date, setDate] = React.useState(
+        formatDate(
+            new Date(
+                `${wtf.getFullYear()}-${(wtf.getUTCMonth() + 1).toString().padStart(2, "0")}-${(wtf.getDay() + 1).toString().padStart(2, "0")} 0:00`
+            )
+        )
+    );
     
     return (
         <div className="PostsPage">

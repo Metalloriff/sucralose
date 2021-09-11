@@ -70,48 +70,20 @@ body {
 	border-radius: $primaryBorderRadius;
 }
 
-footer {
-	background-color: $secondaryBG;
-	
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	
-	padding: 10px;
-	
-	box-shadow: 0 0 15px rgba(black, 0.1);
-	
-	> .Divider {
-		width: 2px;
-		height: 1.5em;
-		
-		border-radius: 2px;
-		margin: 0 10px;
-		
-		background-color: $primaryHover;
-	}
-}
-
 a {
 	color: $primaryColor;
 	text-decoration: none;
 	font-weight: bold;
 }
 
-#root .Mobile footer {
-	flex-direction: column;
-	
-	.Divider {
-		display: none;
-	}
-	
-	> * {
-		margin: 10px 0;
-	}
-}
-
 .Flex {
 	display: flex;
+}
+
+.FlexCenter {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .Spinner {

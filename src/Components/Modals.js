@@ -262,6 +262,11 @@ export class Modals extends React.Component {
 		Modals.instance = this;
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		document.documentElement.style.overflowY = this.state.stack.length ? "hidden" : null;
+		document.documentElement.style.marginRight = this.state.stack.length ? "5px" : null;
+	}
+
 	handleBackdropClick(e) {
 		// Ensure that we're actually clicking the modal background
 		if (e.target !== e.currentTarget) return;

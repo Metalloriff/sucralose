@@ -341,8 +341,7 @@ export function SettingsRenderer() {
                     opacity: 1;
                 }
                 
-                .Footer {
-                    background-color: rgba(0,0,0, 0.5);
+                footer {
                     backdrop-filter: blur(7px);
                 }
             ` }

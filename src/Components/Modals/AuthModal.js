@@ -5,6 +5,7 @@ import { Modals } from "../Modals";
 import Toasts from "../Toasts";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import Database from "../../Classes/Database";
+import { useEventListener } from "../../Classes/Hooks";
 
 // TODO add password reset functionality.
 
@@ -80,6 +81,11 @@ export default function AuthModal() {
                 });
         }
     };
+    
+    useEventListener(
+        "keydown",
+        e => e.key === "Enter" && (signUpMode ? events.handleSignUp() : events.handleLogIn())
+    );
     
     return (
         <div className="AuthModal" ref={ref}>

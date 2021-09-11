@@ -4,7 +4,7 @@ import * as Feather from "react-feather";
 import Tooltip from "../Tooltip";
 import { download, joinClassNames } from "../../Classes/Constants";
 import Posts from "./Posts";
-import { openImageModal } from "../Modals";
+import { copyToClipboard, openImageModal } from "../Modals";
 import API from "../../Classes/API";
 import _ from "lodash";
 import TagItem from "./TagItem";
@@ -12,6 +12,7 @@ import InlineLoading from "../InlineLoading";
 import ContextMenu from "../ContextMenuHandler";
 import Toasts from "../Toasts";
 import App from "../../App";
+import { Settings, SettingsRenderer } from "../../Pages/SettingsPage";
 
 /**
  * The generic post component.
@@ -119,6 +120,9 @@ export default function Post({ post }) {
         },
         openInNewTab: () => window.open(`#post/${id}`, "_blank")
     };
+    
+    const conditionalDnp = tags.artist.indexOf("conditional_dnp");
+    !!~conditionalDnp && tags.artist.splice(conditionalDnp, 1);
 
     // Render me harder, daddy.
     return previewImage && file.ext !== "swf" ? (
@@ -248,6 +252,20 @@ export function PostContextMenu({ post }) {
     
     return (
         <ContextMenu>
+            <ContextMenu.Item
+                icon={<Feather.Clipboard/>}
+                onClick={() => copyToClipboard(post.id)}
+                autoClose
+            >Copy Post ID</ContextMenu.Item>
+            
+            <ContextMenu.Item
+                icon={<Feather.Image/>}
+                onClick={() => (Settings.props.backgroundImage.url.value = post.file.url, Settings.save(), SettingsRenderer.forceUpdate())}
+                autoClose
+            >Set As Background</ContextMenu.Item>
+            
+            <ContextMenu.Divider/>
+            
             <ContextMenu.SubMenuItem
                 label="Sets"
                 icon={<Feather.Layers/>}

@@ -8,8 +8,10 @@ import { useEventListener } from "../../Classes/Hooks";
 import QueryManager from "../../Classes/QueryManager";
 import * as Feather from "react-feather";
 import App from "../../App";
+import _ from "lodash";
 
 let lastPageChange = Date.now();
+let hasReachedEnd = false;
 export default function Posts({ search: additionalTags, emptyPlaceholder = null, request = null }) {
     const [posts, setPosts] = React.useState([]);
     const [isFetching, setFetchingState] = React.useState(true);
@@ -37,21 +39,29 @@ export default function Posts({ search: additionalTags, emptyPlaceholder = null,
         }
         
         isFetching && setImmediate(() => {
-            API.request(
-                ...(request ?? [
-                    "posts",
-                    { tags, page }
-                ])
-            ).then(data => {
+            const _request = request ?? [
+                "posts",
+                { tags, page }
+            ];
+            
+            if (_.isEqual(Posts.lastSuccessfulRequest, _request) && Posts.lastHash === window.location.hash)
+                return setFetchingState(false);
+            
+            API.request(..._request).then(data => {
                 // This entire function should be abolished.
                 
                 setFetchingState(false);
+                
+                hasReachedEnd = false;
                 
                 if (page > 1 && !data.posts.length) {
                     QueryManager.set("page", page - 1, {
                         pushHistory: false
                     });
+                    
+                    hasReachedEnd = true;
                 }
+                else Posts.lastSuccessfulRequest = _request;
                 
                 const _posts =
                     tags === search &&  window.location.hash === hash && !request
@@ -73,7 +83,7 @@ export default function Posts({ search: additionalTags, emptyPlaceholder = null,
     
     // Handle infinite scrolling.
     useEventListener("scroll", () => {
-        if (Date.now() - lastPageChange < 2000 || isFetching || !posts?.length) return;
+        if (Date.now() - lastPageChange < 2000 || isFetching || !posts?.length || hasReachedEnd) return;
         
         const target = document.documentElement;
         
@@ -84,7 +94,7 @@ export default function Posts({ search: additionalTags, emptyPlaceholder = null,
             
             lastPageChange = Date.now();
         }
-    }, { dependencies: [isFetching, posts, request] });
+    }, { dependencies: [isFetching, posts, request, hasReachedEnd] });
     
     return (
         <div className="Posts">
@@ -109,6 +119,14 @@ export default function Posts({ search: additionalTags, emptyPlaceholder = null,
             <div className="Items">
                 { posts?.map(post => <Post post={post} key={post.id}/>) }
             </div>
+            
+            { hasReachedEnd && (
+                <div className="ReachedEndPlaceholder FlexCenter">
+                    <h2>You've reached the end of your search.</h2>
+                    
+                    <Feather.Frown/>
+                </div>
+            ) }
             
             <div className={joinClassNames("FetchingStateModal", [isFetching, "Active"])}>
                 <InlineLoading/>

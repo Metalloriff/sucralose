@@ -6,7 +6,7 @@ import _ from "lodash";
 import API from "../../Classes/API";
 import InlineLoading from "../InlineLoading";
 import Tooltip from "../Tooltip";
-import Posts from "../Posts/Posts";
+import Posts  from "../Posts/Posts";
 import SetsList from "../../Pages/SetsPage";
 
 // Create the tag icon types.
@@ -34,6 +34,8 @@ export default function SearchField({
     function search(value = null) {
         // If a value was passed, set the value to that.
         if (value) ref.current.value = value;
+
+        Posts.lastSuccessfulRequest = null;
         
         // Get the query params as an object.
         const params = new URLSearchParams(window.location.search);

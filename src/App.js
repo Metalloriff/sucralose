@@ -1,6 +1,7 @@
 import React from "react";
 import { useMediaQuery } from "react-responsive";
 import "./App.scss";
+import "./city-fog-theme.css";
 import { Modals } from "./Components/Modals";
 import HomePage from "./Pages/Home";
 import Toasts from "./Components/Toasts";
@@ -19,6 +20,7 @@ import _ from "lodash";
 import SetsList, { SetsPage } from "./Pages/SetsPage";
 import PopularPostsPage from "./Pages/PopularPostsPage";
 import TutorialModal from "./Components/Modals/TutorialModal";
+import PageFooter from "./Components/PageElements/PageFooter";
 
 /* TODO 
 
@@ -31,23 +33,36 @@ import TutorialModal from "./Components/Modals/TutorialModal";
 
  */
 
+window.history.scrollRestoration = "manual";
+
 // Ugh.
 let lastSearch = QueryManager.get("search") ?? "";
+let lastHash = window.location.hash;
 let lastModalState = QueryManager.get("modalState");
 export let lastHistoryPop = Date.now();
 window.addEventListener("popstate", () => {
+	PageElement?.forceUpdate();
+	
 	// Get the current search state.
 	const search = QueryManager.get("search") ?? "";
 	// If the search states do not match, handle page update.
-	if (lastSearch !== search && document.getElementById("searchField")) {
+	if ((lastSearch !== search || lastHash !== window.location.hash) && document.getElementById("searchField")) {
 		// Clear all post states.
 		Posts.instance?.setPosts([]);
 		SetsList.instances?.forEach(instance => instance.setSets([ ]));
 		// Set the search field value to the search.
 		document.getElementById("searchField").value = search;
+		
+		if (parseInt(QueryManager.get("page")) > 1) {
+			QueryManager.set("page", 1, {
+				pushHistory: false
+			});
+		}
 
 		// Set the last search state to the current search state.
 		lastSearch = search;
+		// Set the last hash state to the current hash state.
+		lastHash = window.location.hash;
 	}
 	
 	// Get the current modal state.
@@ -76,9 +91,17 @@ window.addEventListener("popstate", () => {
 	
 	// Set the last pop state time to now.
 	lastHistoryPop = Date.now();
+	
+	// Jesus fucking christ.
+	setImmediate(() => {
+		Posts.lastHash = window.location.hash;
+	});
 });
 
 function PageElement() {
+	const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+	PageElement.forceUpdate = forceUpdate;
+	
 	// Store the formatted hash in a variable.
 	const [hash, ...args] = (window.location.hash
 		.split(/#\/?/)[1] ?? "")
@@ -277,18 +300,8 @@ export default function App() {
 			<div className="Main">
 				<PageElement/>
 			</div>
-
-			<footer className="Footer">
-				<div><a href="https://feathericons.com/">Icons License</a></div>
-				<div className="Divider"/>
-				<div><a href="https://metalloriff.github.io/city-fog">Default Theme</a></div>
-				<div className="Divider"/>
-				<div><a href="https://metalloriff.github.io/sucralose-legacy">Sucralose Legacy</a></div>
-				<div className="Divider"/>
-				<div>Copyright © 2021-{new Date().getFullYear()} Metalloriff</div>
-				<div className="Divider"/>
-				<div><a href="https://paypal.me/israelboone">♥ Donate ♥</a></div>
-			</footer>
+			
+			<PageFooter/>
 
 			<Modals/>
 			<Toasts/>
