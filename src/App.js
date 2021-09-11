@@ -229,67 +229,6 @@ export default function App() {
 					localStorage.setItem("hasPromptedLogin", "1");
 				}
 			}
-			
-			// If the user is new to the site, display the V2 modal.
-			if (!localStorage.getItem("v2")) {
-				Modals.push(
-					<TutorialModal title="Welcome to the new Sucralose!">
-						<h2>What's different?</h2>
-						
-						<p>
-							I've re-built the site from the ground up, with better code, performance, 
-							and most importantly, better device support.
-						</p>
-						
-						<p>
-							Some of the new features include the following:
-							
-							<ul>
-								<li>
-									<div><b>Database!</b></div>
-									I've added a Firebase database to the site, which will let you create 
-									an account and sync your data between devices and browsers.
-								</li>
-								
-								<br/>
-								
-								<li>
-									<div><b>Mobile support</b></div>
-									Mobile support was pretty bad in the previous release, but 
-									this version was started with mobile in mind.
-								</li>
-								
-								<br/>
-								
-								<li>
-									<div><b>Better UI/UX</b></div>
-									This is of course an opinional thing, but the user interface and user 
-									experience has been redesigned for a friendlier experience.
-								</li>
-								
-								<br/>
-								
-								<li>
-									<div><b>Popular page</b></div>
-									This is an overlooked feature in e621, mostly because its UI is 
-									so outdated; but it has been incorporated into Sucralose with a 
-									little better interface.
-								</li>
-								
-								<br/>
-								
-								<li>
-									<div><b>Search everything, everywhere</b></div>
-									The previous version of Sucralose did not let you search hot, 
-									favorites, sets, etc. All of this is fixed in this version.
-								</li>
-							</ul>
-						</p>
-					</TutorialModal>
-				);
-				
-				localStorage.setItem("v2", "1");
-			}
 		});
 	}, []);
 

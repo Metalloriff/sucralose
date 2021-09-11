@@ -116,6 +116,7 @@ export default function SearchField({
             <input className="SearchField" {...events} ref={ref}
                    id="searchField" autoCorrect="false"
                    defaultValue={defaultValue}
+                   autoComplete="off"
                    placeholder={placeholder}/>
             
             <Feather.Search className="Button" onClick={search.bind(null, null)}/>

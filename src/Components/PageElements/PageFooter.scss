@@ -67,6 +67,11 @@
 		
 		grid-template-columns: repeat(3, 140px);
 		
+		@media (max-width: 450px) {
+			display: flex;
+			flex-direction: column;
+		}
+		
 		> * {
 			margin: 15px 0;
 		}

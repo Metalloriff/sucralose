@@ -344,6 +344,11 @@ export function SettingsRenderer() {
                 footer {
                     backdrop-filter: blur(7px);
                 }
+                
+                .SearchFieldContainer.Focused:After {
+                    background-color: rgba(0,0,0, 0.2);
+                    backdrop-filter: blur(5px);
+                }
             ` }
         </style>
     );

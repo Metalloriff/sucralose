@@ -13,6 +13,9 @@
   
   .NavigationButtons {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    
     margin-top: 10px;
     
     .Left, .Right {
@@ -21,6 +24,12 @@
     
     .Right {
       margin-left: auto;
+    }
+
+    @media (max-width: 420px) {
+      .Right {
+        margin-left: 0;
+      }
     }
 
     .Button {
