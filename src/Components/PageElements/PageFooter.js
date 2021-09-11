@@ -65,7 +65,7 @@ export default function PageFooter() {
                 
                 <div className="RightSections FlexCenter">
                     <div className="LinksSection">
-                        <a href="https://github.com/Metalloriff/metalloriff.github.io">Source Code</a>
+                        <a href="https://github.com/Metalloriff/sucralose">Source Code</a>
                         <a href="https://feathericons.com/">Icons Used</a>
                         <a href="https://metalloriff.github.io/city-fog">Color Palette</a>
                         <a href="https://paypal.me/israelboone">

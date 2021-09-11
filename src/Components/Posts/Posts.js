@@ -39,9 +39,24 @@ export default function Posts({ search: additionalTags, emptyPlaceholder = null,
         }
         
         isFetching && setImmediate(() => {
+            if (request && !request[1].page)
+                request[1].page = page;
+            if (request && !request[1].tags)
+                request[1].tags = tags;
+            
+            let endpoint = "posts";
+            const params = { tags, page };
+            
+            if (additionalTags === `favoritedby:${App.e621User?.name}` &&
+                !document.getElementById("searchField")?.value) {
+                endpoint = "favorites";
+                
+                delete params.tags;
+            }
+            
             const _request = request ?? [
-                "posts",
-                { tags, page }
+                endpoint,
+                params
             ];
             
             if (_.isEqual(Posts.lastSuccessfulRequest, _request) && Posts.lastHash === window.location.hash)
