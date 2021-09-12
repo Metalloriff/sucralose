@@ -118,14 +118,14 @@ export function ImageModal({ url, getSources, buttons }) {
 	return (
 		<div className="ImageModal" onClick={e => e.target === e.currentTarget && Modals.pop()}>
 			<div className={joinClassNames("ImageContainer", [expanded, "Expanded"])}>
-				<ImageComponent
-					key={getRandomKey()}
-					image={sources[index - 1]}
-					setLoaded={setLoaded}
-					setFailed={setFailed}
-					
-					className="Previous"
-				/>
+				{/*<ImageComponent*/}
+				{/*	key={getRandomKey()}*/}
+				{/*	image={sources[index - 1]}*/}
+				{/*	setLoaded={setLoaded}*/}
+				{/*	setFailed={setFailed}*/}
+				{/*	*/}
+				{/*	className="Previous"*/}
+				{/*/>*/}
 				
 				<ImageComponent
 					key={getRandomKey()}
@@ -134,14 +134,14 @@ export function ImageModal({ url, getSources, buttons }) {
 					setFailed={setFailed}
 				/>
 				
-				<ImageComponent
-					key={getRandomKey()}
-					image={sources[index + 1]}
-					setLoaded={setLoaded}
-					setFailed={setFailed}
-					
-					className="Next"
-				/>
+				{/*<ImageComponent*/}
+				{/*	key={getRandomKey()}*/}
+				{/*	image={sources[index + 1]}*/}
+				{/*	setLoaded={setLoaded}*/}
+				{/*	setFailed={setFailed}*/}
+				{/*	*/}
+				{/*	className="Next"*/}
+				{/*/>*/}
 			</div>
 			
 			<div className="Footer">

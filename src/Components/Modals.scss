@@ -103,7 +103,7 @@
 		
 		max-height: 80vh;
 
-		img {
+		img, video {
 			max-width: 90vw;
 			height: 100%;
 
@@ -125,10 +125,6 @@
 		}
 		
 		video {
-			max-width: 90vw;
-			height: 100%;
-			
-			object-fit: contain;
 			pointer-events: all;
 			
 			z-index: 10;
