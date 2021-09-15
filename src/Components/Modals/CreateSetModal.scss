@@ -1,0 +1,30 @@
+﻿@import "../../Variables";
+
+.CreateSetModal {
+	.FieldContainer {
+		margin-top: 30px;
+	}
+	
+	.SwitchItem {
+		margin-bottom: 20px;
+	}
+	
+	.Note {
+		margin-top: -15px;
+		margin-bottom: 15px;
+		
+		font-size: 0.9em;
+		opacity: 0.8;
+	}
+	
+	.Button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
+		padding: 7px;
+		
+		background-color: $secondaryBG;
+		cursor: pointer;
+	}
+}

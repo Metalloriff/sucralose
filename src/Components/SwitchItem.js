@@ -4,7 +4,7 @@ import "./SwitchItem.scss";
 export default function SwitchItem({ title, defaultValue, callback }) {
     return (
         <div className="SwitchItem">
-            <div className="Title">{title}</div>
+            <h3 style={{ margin: 0 }}>{title}</h3>
             
             <input className="Switch"
                    type="checkbox"

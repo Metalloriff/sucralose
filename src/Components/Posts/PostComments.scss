@@ -39,6 +39,21 @@
 				width: 150px;
 				height: 150px;
 				
+				.AvatarPlaceholder {
+					position: absolute;
+					top: 0; left: 0; bottom: 0; right: 0;
+					
+					background-color: rgba(black, 0.35);
+					backdrop-filter: blur(5px);
+					
+					z-index: -1;
+					
+					> svg {
+						width: 60px;
+						height: 60px;
+					}
+				}
+				
 				.Avatar {
 					width: 100%;
 					height: 100%;
@@ -63,11 +78,28 @@
 		
 		.BodySection {
 			margin-left: 20px;
+			flex-grow: 1;
 			
 			.Username {
 				color: $primaryColor;
 				font-weight: bolder;
 				cursor: pointer;
+			}
+			
+			textarea.Body {
+				flex-grow: 1;
+				
+				width: 100%;
+				padding: 10px;
+				
+				resize: none;
+				border: none;
+				outline: none;
+				
+				color: var(--txt-color);
+				
+				background-color: rgba(black, 0.2);
+				backdrop-filter: blur(5px);
 			}
 		}
 	}

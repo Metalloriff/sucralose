@@ -70,7 +70,6 @@ function ImageComponent({ image, setLoaded, setFailed, className }) {
 		);
 }
 
-// TODO update this
 export function ImageModal({ url, getSources, buttons }) {
 	// Get the sources or create a single-item array
 	const sources = typeof(getSources) === "function" ? getSources().filter(u => u) : [url];

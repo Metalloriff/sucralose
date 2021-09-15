@@ -43,6 +43,11 @@ export default function PostPage({ id }) {
                     <div className="ImageContainer">
                         <img className="Image"
                              src={post.file.url}
+                             {...{}/* If you can write lazier code than this, I will do nothing because I'm too lazy. */}
+                             {...{}/* TODO not this */}
+                             onError={({ target }) =>
+                                 target.outerHTML = target.outerHTML.replace("img", "video")}
+                             loop controls
                              alt="Post Image"/>
                     </div>
                     

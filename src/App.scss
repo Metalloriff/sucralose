@@ -133,3 +133,37 @@ a {
 	
 	transition: opacity $t;
 }
+
+#root .ScrollIndicator {
+	position: fixed;
+	
+	bottom: 60px;
+	right: 60px;
+	
+	width: 60px;
+	height: 60px;
+	
+	color: $primaryColor;
+	
+	background-color: rgba(black, 0.5);
+	border: 2px solid currentColor;
+	
+	backdrop-filter: blur(5px);
+	border-radius: 100%;
+	
+	z-index: 1000;
+	cursor: pointer;
+	
+	> svg {
+		width: 30px;
+		height: 30px;
+	}
+	
+	transform: translateY(200px);
+	transition: transform $t;
+	will-change: transform;
+	
+	&.Active {
+		transform: none;
+	}
+}

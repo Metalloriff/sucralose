@@ -67,39 +67,43 @@
 					border: none;
 				}
 			}
-			
-			input.Field {
-				position: relative;
-				
-				background: none;
-				outline: none;
-				border: none;
-				
-				border-bottom: 2px solid var(--txt-color);
-				padding: 7px;
-				min-width: 50%;
-				
-				color: var(--txt-color);
-				
-				&::Placeholder {
-					color: var(--txt-color);
-				}
-				
-				transition: color $ft, border-color $ft, background-color $ft;
-
-				&.Confidential {
-					color: transparent;
-					text-shadow: 0 0 7px var(--txt-color);
-				}
-				
-				&:Focus {
-					color: white;
-					border-color: $primaryColor;
-					background-color: $secondaryBG;
-				}
-			}
 		}
 	}
+}
+
+input.Field, textarea.Field {
+	position: relative;
+
+	background: none;
+	outline: none;
+	border: none;
+
+	border-bottom: 2px solid var(--txt-color);
+	padding: 7px;
+	min-width: 50%;
+
+	color: var(--txt-color);
+
+	&::Placeholder {
+		color: var(--txt-color);
+	}
+
+	transition: color $ft, border-color $ft, background-color $ft;
+
+	&.Confidential {
+		color: transparent;
+		text-shadow: 0 0 7px var(--txt-color);
+	}
+
+	&:Focus {
+		color: white;
+		border-color: $primaryColor;
+		background-color: $secondaryBG;
+	}
+}
+
+textarea.Field {
+	min-height: 100px;
 }
 
 #root .Mobile .SettingsPage {

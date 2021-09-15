@@ -19,15 +19,14 @@ import API from "./Classes/API";
 import _ from "lodash";
 import SetsList, { SetsPage } from "./Pages/SetsPage";
 import PopularPostsPage from "./Pages/PopularPostsPage";
-import TutorialModal from "./Components/Modals/TutorialModal";
 import PageFooter from "./Components/PageElements/PageFooter";
+import { useEventListener } from "./Classes/Hooks";
+import { ChevronsUp } from "react-feather";
+import Tooltip from "./Components/Tooltip";
 
 /* TODO 
 
-	Add an option to set a custom background.
-	Add popular page https://e621.net/explore/posts/popular
 	Put all to-do on README.md
-	Fix the order of favorites posts.
 	Add a list for blacklist and subscriptions.
 	Add a quick blacklist toggle menu.
 
@@ -181,6 +180,8 @@ export default function App() {
 	const [, forceUpdate] = React.useReducer(x => x + 1, 0);
 	App.forceUpdate = forceUpdate;
 	App.userData = App.userData ?? { };
+
+	const [isScrolledDown, setScrolledDown] = React.useState(false);
 	
 	React.useEffect(() => {
 		onAuthStateChanged(Database.auth, user => {
@@ -232,12 +233,38 @@ export default function App() {
 		});
 	}, []);
 
+	useEventListener(
+		"scroll",
+		_.debounce(() => {
+			const { scrollTop } = document.documentElement;
+
+			setScrolledDown(
+				scrollTop > window.innerHeight && !!~[
+					"posts",
+					"hot",
+					"popular",
+					"sets",
+					"subscriptions",
+					"favorites",
+					"upvoted"
+				].indexOf(App.hash)
+			);
+		}, 100)
+	);
+
 	return (
 		<div className={joinClassNames("App", isMobile ? "Mobile" : "Desktop")}>
 			<div className="AppBackground"/>
 			
 			<div className="Main">
 				<PageElement/>
+				
+				<div
+					className={joinClassNames("ScrollIndicator", "HasTooltip", "FlexCenter", [isScrolledDown, "Active"])}
+					onClick={() => (window.scrollTo(0, 0, { behavior: "smooth" }, setScrolledDown(false)))}
+				>
+					<ChevronsUp/>
+				</div>
 			</div>
 			
 			<PageFooter/>

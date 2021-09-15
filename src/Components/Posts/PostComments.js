@@ -6,6 +6,8 @@ import InlineLoading from "../InlineLoading";
 import { ReactComponent as Kermit } from "../../Icons/Kermit.svg";
 import LinkWrapper from "../LinkWrapper";
 import { joinClassNames } from "../../Classes/Constants";
+import * as Feather from "react-feather";
+import App from "../../App";
 
 /* TODO
 
@@ -57,12 +59,16 @@ export default function PostComments({ id }) {
                             <div className="Comment" key={comment.id}>
                                 <div className="UserSection">
                                     <div className="AvatarContainer">
-                                        <LinkWrapper href={`#post/${comment.avatarPost?.id}`}>
+                                        <div className="AvatarPlaceholder FlexCenter">
+                                            <Feather.User/>
+                                        </div>
+                                        
+                                        <LinkWrapper href={`#post/${comment.avatarPost?.id ?? "not_found"}`}>
                                             <img
                                                 className={joinClassNames("Avatar", [comment.avatarPost?.rating === "e", "NSFW"])}
                                                 src={comment.avatarPost?.cropped_url}
-                                                onError={({ target }) => target.src = comment.avatarPost?.preview_url}
-                                                alt="User Avatar"
+                                                onError={({ target }) => target.src = comment.avatarPost?.preview_url }
+                                                alt=""
                                             />
                                         </LinkWrapper>
                                     </div>
@@ -84,6 +90,33 @@ export default function PostComments({ id }) {
                         ))}
                     </div>
                 )
+            ) }
+            
+            { App.e621User && (
+                <div className="CommentCreatorSection Comments">
+                    <div className="Comment">
+                        <div className="UserSection">
+                            <div className="AvatarContainer">
+                                <div className="AvatarPlaceholder FlexCenter">
+                                    <Feather.User/>
+                                </div>
+
+                                <LinkWrapper href={`#post/${App.e621User.avatarPost?.id ?? "not_found"}`}>
+                                    <img
+                                        className={joinClassNames("Avatar", [App.e621User.avatarPost?.rating === "e", "NSFW"])}
+                                        src={App.e621User.avatarPost?.cropped_url}
+                                        onError={({ target }) => target.src = App.e621User.avatarPost?.preview_url }
+                                        alt=""
+                                    />
+                                </LinkWrapper>
+                            </div>
+                        </div>
+
+                        <div className="BodySection Flex">
+                            <textarea className="Body" placeholder="This doesn't do anything yet. I got lazy."/>
+                        </div>
+                    </div>
+                </div>
             ) }
         </div>
     )

@@ -4,7 +4,7 @@ import * as Feather from "react-feather";
 import Tooltip from "../Tooltip";
 import { download, joinClassNames } from "../../Classes/Constants";
 import Posts from "./Posts";
-import { copyToClipboard, openImageModal } from "../Modals";
+import { copyToClipboard, Modals, openImageModal } from "../Modals";
 import API from "../../Classes/API";
 import _ from "lodash";
 import TagItem from "./TagItem";
@@ -14,6 +14,7 @@ import Toasts from "../Toasts";
 import App from "../../App";
 import { Settings, SettingsRenderer } from "../../Pages/SettingsPage";
 import LinkWrapper from "../LinkWrapper";
+import CreateSetModal from "../Modals/CreateSetModal";
 
 /**
  * The generic post component.
@@ -290,10 +291,8 @@ export function PostContextMenu({ post }) {
                 
                 <ContextMenu.Item
                     icon={<Feather.PlusSquare/>}
-                    onClick={() => Toasts.showToast(
-                        "Not yet added - please do this in e621 for now", 
-                        "Failure"
-                    )}
+                    autoClose
+                    onClick={() => Modals.push(<CreateSetModal postId={post.id}/>)}
                 >New Set</ContextMenu.Item>
             </ContextMenu.SubMenuItem>
         </ContextMenu>

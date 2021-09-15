@@ -1,6 +1,16 @@
-﻿export default new class QueryManager {
+﻿function fromEntries(entries) {
+    const obj = { };
+    
+    for (const [key, value] of entries) {
+        obj[key] = value;
+    }
+    
+    return obj;
+}
+
+export default new class QueryManager {
     get query() {
-        return Object.fromEntries(
+        return fromEntries(
             new URLSearchParams(window.location.search)
         );
     }
