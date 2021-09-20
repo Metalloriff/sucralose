@@ -3,79 +3,79 @@
 .PostPage {
 	.ImageContainer {
 		position: relative;
-		
+
 		flex-grow: 1;
 		height: calc(90vh - 100px);
-		
+
 		background-color: rgba(black, 0.2);
 		backdrop-filter: blur(5px);
-		
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		
+
 		.Image {
-			height: 100%;
+			max-height: 100%;
 			max-width: 100%;
 		}
 	}
-	
+
 	.PostBodyMain {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		
+
 		.Button {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			
+
 			padding: 7px;
 			margin: 7px;
-			
+
 			> svg {
 				margin-right: 5px;
 			}
-			
+
 			cursor: pointer;
 			transition: color $ft, background-color $ft;
-			
-			&:Hover {
+
+			&:hover {
 				color: white;
 				background-color: $primaryColor;
 			}
 		}
 	}
-	
+
 	.TagsList {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		
+
 		.Tags {
 			display: flex;
 			flex-wrap: wrap;
-			
+
 			width: 800px;
 			max-width: 80vw;
-			
+
 			margin-bottom: 40px;
-			
+
 			.TagItem {
 				background-color: $secondaryBG;
-				
+
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				
+
 				padding: 3px 7px;
 				margin: 5px;
-				
+
 				.Actions {
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					
+
 					svg {
 						width: 18px;
 						height: 18px;
@@ -84,40 +84,40 @@
 			}
 		}
 	}
-	
+
 	.PostDescriptionContainer {
 		justify-content: center;
-		
+
 		.PostDescription {
 			background-color: $secondaryBG;
 
 			width: 800px;
 			max-width: 80vw;
-			
+
 			padding: 15px;
 		}
 	}
-	
+
 	.PostDetails {
 		justify-content: center;
 		position: relative;
-		
+
 		> div {
 			width: 800px;
 			max-width: 80vw;
-			
+
 			overflow: hidden;
 		}
-		
+
 		.Entry {
 			> div {
 				user-select: text;
 			}
-			
+
 			margin-bottom: 40px;
 		}
 	}
-	
+
 	h2 {
 		text-transform: uppercase;
 	}

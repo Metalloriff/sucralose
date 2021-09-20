@@ -7,7 +7,7 @@ import { getRandomKey, joinClassNames } from "../Classes/Constants";
 import Tooltip from "./Tooltip";
 import LinkWrapper from "./LinkWrapper";
 import * as Feather from "react-feather";
-import { useEventListener, useOnMount } from "../Classes/Hooks";
+import { useEventListener, useOnMount, useOnUnmount } from "../Classes/Hooks";
 import QueryManager from "../Classes/QueryManager";
 import { lastHistoryPop } from "../App";
 
@@ -48,50 +48,71 @@ export async function copyToClipboard(text) {
 	}
 }
 
-function ImageComponent({ image, setLoaded, setFailed, className }) {
+function ImageComponent({ image, setLoaded, setFailed, className, onClick }) {
+	const ref = React.useRef();
 	const [loaded, _setLoaded] = React.useState(false);
-	
+
 	const events = {
 		onLoad: () => (setLoaded?.(true), setFailed?.(false), _setLoaded(true)),
-		onError: () => (setLoaded?.(true), setFailed?.(true), _setLoaded(true))
+		onError: () => (setLoaded?.(true), setFailed?.(true), _setLoaded(true)),
+		onClick
 	};
-	
+
+	useOnUnmount(() => {
+		if (ref.current) {
+			ref.current.pause();
+		}
+	});
+
 	if (!image) return null;
-	
+
 	return /\.webm$/.test(image.full)
-		? <video src={image.full} controls loop {...events}/> : (
+		? <video
+			ref={ref}
+			src={image.full}
+			controls={!className}
+			loop
+			muted
+			className={className}
+			{...events}
+		/> : (
 			<>
 				<img src={image.preview} alt="Preview failed to load"
-					 style={{ display: loaded && !className ? "none" : null }} className={className}/>
-	
-				{ !className && <img src={image.full} alt="Image failed to load" className={className}
-									 style={{ display: loaded ? null : "none" }} {...events}/> }
+					style={{ display: loaded && !className ? "none" : null }} className={className} />
+
+				{!className && <img src={image.full} alt="Image failed to load" className={className}
+					style={{ display: loaded ? null : "none" }} {...events} />}
 			</>
 		);
 }
 
 export function ImageModal({ url, getSources, buttons }) {
 	// Get the sources or create a single-item array
-	const sources = typeof(getSources) === "function" ? getSources().filter(u => u) : [url];
-	
+	const sources = typeof (getSources) === "function" ? getSources().filter(u => u) : [url];
+
 	const ref = React.useRef();
-	
+	const container = React.useRef();
+
 	// Create a state based on the index of the current url
 	const [index, _setIndex] = React.useState(sources.findIndex(f => f.full === url));
 	function setIndex(index) {
 		// We don't talk about this in my job interview.
 		document.querySelector(`[src="${sources[index].preview}"]`)?.scrollIntoView();
-		
+
 		_setIndex(index);
 	}
-	
+
 	// Handle the modal state query.
 	React.useEffect(() => {
 		QueryManager.set("modalState", "open");
-		
+
 		return () => Date.now() - lastHistoryPop > 500 && window.history.back();
 	}, []);
-	
+
+	React.useEffect(() => {
+		container && container.current.style.setProperty("--translation", "0");
+	}, [container, index]);
+
 	// Create a navigate function to handle safely navigating images
 	const nav = dir =>
 		sources[index + dir]
@@ -99,11 +120,11 @@ export function ImageModal({ url, getSources, buttons }) {
 			: Toasts.showToast("No more images in this direction!", "Failure");
 	// Create an expanded state based on the serialized settings state
 	const [expanded, setExpandedState] = React.useState(true);
-	
+
 	// These are placeholders, I'm too lazy to add them
 	const [loaded, setLoaded] = React.useState(false);
 	const [failed, setFailed] = React.useState(false);
-	
+
 	// Handle keyboard navigation/controls.
 	useEventListener("keydown", ({ key }) => {
 		switch (key) {
@@ -112,71 +133,132 @@ export function ImageModal({ url, getSources, buttons }) {
 			case "ArrowRight": return nav(1);
 		}
 	}, { dependencies: [index] });
-	
+
+	// Handle touch controls
+	const mobileEvents = {
+		onTouchStart: e => {
+			const tapX = e.touches[0].clientX;
+			const tapY = e.touches[0].clientY;
+
+			let translation = 0;
+
+			const handler = e => {
+				const alias = 50;
+				translation = e.touches[0].clientX - tapX;
+
+				if (Math.abs(translation) < alias) return;
+				if (translation < 0) translation += alias;
+				else translation -= alias;
+
+				translation /= window.innerWidth;
+				translation *= 100;
+
+				container.current.style.setProperty(
+					"--translation",
+					translation
+				);
+			};
+
+			document.addEventListener("touchmove", handler);
+
+			let remove;
+			document.addEventListener("touchend", remove = () => {
+				setTimeout(() => {
+					const translation = parseFloat(container.current.style.getPropertyValue("--translation"));
+					container.current.style.setProperty(
+						"--translation",
+						translation > 25
+							? "100"
+							: translation < -25
+								? "-100"
+								: "0"
+					);
+
+					document.removeEventListener("touchmove", handler);
+					document.removeEventListener("touchend", remove);
+
+					setTimeout(() => {
+						if (!container.current) return;
+
+						const translation = parseFloat(container.current.style.getPropertyValue("--translation"));
+						if (translation >= 75) {
+							nav(-1);
+						}
+						else if (translation <= -75) {
+							nav(1);
+						}
+					}, 200);
+				}, 100);
+			});
+		}
+	};
+
 	// Render bender
 	return (
-		<div className="ImageModal" onClick={e => e.target === e.currentTarget && Modals.pop()}>
+		<div ref={container} className="ImageModal" onClick={e => e.target === e.currentTarget && Modals.pop()} {...mobileEvents}>
 			<div className={joinClassNames("ImageContainer", [expanded, "Expanded"])}>
-				{/*<ImageComponent*/}
-				{/*	key={getRandomKey()}*/}
-				{/*	image={sources[index - 1]}*/}
-				{/*	setLoaded={setLoaded}*/}
-				{/*	setFailed={setFailed}*/}
-				{/*	*/}
-				{/*	className="Previous"*/}
-				{/*/>*/}
-				
+				<ImageComponent
+					key={getRandomKey()}
+					image={sources[index - 1]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+
+					className="Previous"
+					onClick={() => nav(-1)}
+				/>
+
 				<ImageComponent
 					key={getRandomKey()}
 					image={sources[index]}
 					setLoaded={setLoaded}
 					setFailed={setFailed}
 				/>
-				
-				{/*<ImageComponent*/}
-				{/*	key={getRandomKey()}*/}
-				{/*	image={sources[index + 1]}*/}
-				{/*	setLoaded={setLoaded}*/}
-				{/*	setFailed={setFailed}*/}
-				{/*	*/}
-				{/*	className="Next"*/}
-				{/*/>*/}
+
+				<ImageComponent
+					key={getRandomKey()}
+					image={sources[index + 1]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+
+					className="Next"
+					onClick={() => nav(1)}
+				/>
 			</div>
-			
+
 			<div className="Footer">
 				<div className={joinClassNames("Button Arrow Left",
 					[!sources.length || !index, "Disabled"])} onClick={() => nav(-1)}>
-					<Feather.ChevronLeft/>
+					<Feather.ChevronLeft />
 					<Tooltip>Previous Image</Tooltip>
 				</div>
 
-				<div className="Divider"/>
-				
-				{ buttons?.(index) ?? (
+				<div className="Divider" />
+
+				{buttons?.(index) ?? (
 					<>
 						<div className="Button" onClick={() => (setExpandedState(!expanded))}>
-							{ expanded ? <Feather.Minimize/> : <Feather.Maximize/> }
+							{expanded ? <Feather.Minimize /> : <Feather.Maximize />}
 							<Tooltip>{expanded ? "Compress" : "Expand"}</Tooltip>
 						</div>
 
 						<div className="Button">
-							<Feather.Clipboard/>
+							<Feather.Clipboard />
 							<Tooltip>Copy URL</Tooltip>
 						</div>
 
 						<LinkWrapper className="Button" style={{ display: "block", color: "white" }}
-									 href={sources[index].full}>
-							<Feather.ExternalLink/>
+							href={sources[index].full}>
+							<Feather.ExternalLink />
 							<Tooltip>Open In New Tab</Tooltip>
 						</LinkWrapper>
 					</>
-				) }
+				)}
 
-				<div className="Divider"/>
-				
+				<div className="Divider" />
+
 				<div className={joinClassNames("Button Arrow Right",
 					[!sources.length || index + 1 >= sources.length, "Disabled"])} onClick={() => nav(1)}>
-					<Feather.ChevronRight/>
+					<Feather.ChevronRight />
 					<Tooltip>Next Image</Tooltip>
 				</div>
 			</div>
@@ -189,8 +271,8 @@ export function ImageModal({ url, getSources, buttons }) {
  * @param url The URI for the image to focus.
  * @param getSources? An option callback function that returns an array of URIs.
  */
-export function openImageModal(url, getSources = null, options = { }) {
-	Modals.push(<ImageModal url={url} getSources={getSources} {...options}/>);
+export function openImageModal(url, getSources = null, options = {}) {
+	Modals.push(<ImageModal url={url} getSources={getSources} {...options} />);
 }
 
 /**
@@ -204,18 +286,18 @@ export function openImageModal(url, getSources = null, options = { }) {
  * @returns {Promise<boolean>}
  */
 export async function openBoolModal({
-	  title = "",
-	  description = "",
-	  yesText = "Yes",
-	  noText = "No",
-	  yesColor = "#ff6666",
-	  noColor = ""
+	title = "",
+	description = "",
+	yesText = "Yes",
+	noText = "No",
+	yesColor = "#ff6666",
+	noColor = ""
 }) {
 	const response = await new Promise(resolve => {
 		Modals.push(
 			<div className="BoolModal PrimaryBg">
-				<div className="Title" dangerouslySetInnerHTML={{ __html: title }}/>
-				<div className="Description" dangerouslySetInnerHTML={{ __html: description }}/>
+				<div className="Title" dangerouslySetInnerHTML={{ __html: title }} />
+				<div className="Description" dangerouslySetInnerHTML={{ __html: description }} />
 
 				<div className="Footer">
 					<div className="Button TertiaryBg" onClick={() => resolve(false)} style={{ backgroundColor: noColor }}>{noText}</div>
@@ -224,7 +306,7 @@ export async function openBoolModal({
 			</div>
 		);
 	});
-	
+
 	Modals.pop();
 
 	return response;
@@ -240,7 +322,7 @@ export async function openStringModal(options = {}) {
 
 	const response = await new Promise(resolve => {
 		Modals.push(
-			<StringModal resolve={resolve} {...options}/>
+			<StringModal resolve={resolve} {...options} />
 		);
 	});
 
@@ -268,16 +350,16 @@ export class Modals extends React.Component {
 		// Destructure the instance state
 		const { stack, closing } = this.instance.state;
 		const modal = stack[stack.length - 1];
-		
+
 		// If there is nothing to close, return
 		if (!stack.length || !modal) return;
-		
+
 		// Push the modal to the closing state, activating the transition
 		this.instance.setState({ closing: [...closing, modal] });
-		
+
 		// Wait for the transition
 		await new Promise(r => setTimeout(r, 150));
-		
+
 		// Set the new state, removing the modal from both stack states
 		this.instance.setState({
 			stack: this.instance.state.stack.filter(m => m !== modal),
@@ -303,27 +385,27 @@ export class Modals extends React.Component {
 
 		// If the modal has an on backdrop click prop, run it and return
 		const { stack } = this.state;
-		if (stack[stack.length - 1] && typeof(stack[stack.length - 1].props?.onBackdropClick) === "function")
+		if (stack[stack.length - 1] && typeof (stack[stack.length - 1].props?.onBackdropClick) === "function")
 			return stack[stack.length - 1].props.onBackdropClick();
-		
+
 		// K I L L
 		Modals.pop().catch(console.error.bind(console, "Failed to pop modal!"));
 	}
 
 	render() {
 		const { stack, closing } = this.state;
-		
+
 		return (
 			<div className={"ModalStack" + (stack.length > closing.length ? " Active" : "")}>
-				{ stack.map((modal, id) => (
+				{stack.map((modal, id) => (
 					<ErrorBoundary>
 						<div className={"ModalContainer" +
-							 (~closing.indexOf(modal) || id < stack.length - 1 ? " Closing" : "")}
-							 key={id}
-							 onMouseDown={this.handleBackdropClick.bind(this)}
-							 style={{ zIndex: id * 10 }}>{ modal }</div>
+							(~closing.indexOf(modal) || id < stack.length - 1 ? " Closing" : "")}
+							key={id}
+							onMouseDown={this.handleBackdropClick.bind(this)}
+							style={{ zIndex: id * 10 }}>{modal}</div>
 					</ErrorBoundary>
-				)) }
+				))}
 			</div>
 		);
 	}
@@ -333,17 +415,17 @@ export function StringModal(props) {
 	const { title = "", description = "", yesText = "Confirm", noText = "Cancel", yesColor = "", noColor = "", value = "", onChange = null, rich = false, resolve, id } = props;
 	const [no, setNoState] = React.useState(false);
 	const [yes, setYesState] = React.useState(false);
-	
+
 	return (
 		<div className="StringModal PrimaryBg">
-			<div className="Title" dangerouslySetInnerHTML={{ __html: title }}/>
-			<div className="Description" dangerouslySetInnerHTML={{ __html: description }}/>
-			
-			<input id={id} className="Field TertiaryBg" defaultValue={value} onChange={onChange}/>
+			<div className="Title" dangerouslySetInnerHTML={{ __html: title }} />
+			<div className="Description" dangerouslySetInnerHTML={{ __html: description }} />
+
+			<input id={id} className="Field TertiaryBg" defaultValue={value} onChange={onChange} />
 
 			<div className="Footer">
-				<div className="Button TertiaryBg" onClick={() => (resolve(null), setNoState(true))} style={{ backgroundColor: noColor }}>{ no ? <InlineLoading/> : noText }</div>
-				<div className="Button TertiaryBg" onClick={() => (resolve(document.getElementById(id).value), setYesState(true))} style={{ backgroundColor: yesColor }}>{ yes ? <InlineLoading/> : yesText }</div>
+				<div className="Button TertiaryBg" onClick={() => (resolve(null), setNoState(true))} style={{ backgroundColor: noColor }}>{no ? <InlineLoading /> : noText}</div>
+				<div className="Button TertiaryBg" onClick={() => (resolve(document.getElementById(id).value), setYesState(true))} style={{ backgroundColor: yesColor }}>{yes ? <InlineLoading /> : yesText}</div>
 			</div>
 		</div>
 	);

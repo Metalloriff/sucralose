@@ -4,7 +4,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	
+
 	.Section {
 		width: 600px;
 		padding: 20px;
@@ -13,56 +13,66 @@
 		background-color: rgba(black, 0.2);
 		backdrop-filter: blur(7px);
 		border-top: 5px solid $primaryColor;
-		
+
+		.Button {
+			color: $primaryColor;
+			border: 2px solid $primaryColor;
+
+			width: max-content;
+			padding: 5px;
+
+			cursor: pointer;
+		}
+
 		h1 {
 			margin-top: 0;
 		}
-		
+
 		u {
 			cursor: pointer;
 		}
-		
-		> :Not(h1) {
+
+		> :not(h1) {
 			margin-top: 15px;
 		}
-		
+
 		.FieldContainer {
 			.ResetButton {
 				margin-left: 10px;
-				
+
 				cursor: pointer;
 				transition: color $ft;
-				
+
 				svg {
 					width: 20px;
 					height: 20px;
-					
+
 					margin-top: 5px;
 				}
-				
+
 				.Tooltip {
 					color: white;
 				}
-				
-				&:Hover {
+
+				&:hover {
 					color: white;
 				}
 			}
-			
+
 			.ColorPicker {
 				border: none;
 				outline: none;
 				appearance: none;
-				
+
 				background: transparent;
 				padding: 0;
 				margin-right: 10px;
-				
+
 				width: 20px;
 				height: 23px;
-				
+
 				cursor: pointer;
-				
+
 				&::-webkit-color-swatch {
 					border: none;
 				}
@@ -71,7 +81,8 @@
 	}
 }
 
-input.Field, textarea.Field {
+input.Field,
+textarea.Field {
 	position: relative;
 
 	background: none;
@@ -84,7 +95,7 @@ input.Field, textarea.Field {
 
 	color: var(--txt-color);
 
-	&::Placeholder {
+	&::placeholder {
 		color: var(--txt-color);
 	}
 
@@ -95,7 +106,7 @@ input.Field, textarea.Field {
 		text-shadow: 0 0 7px var(--txt-color);
 	}
 
-	&:Focus {
+	&:focus {
 		color: white;
 		border-color: $primaryColor;
 		background-color: $secondaryBG;

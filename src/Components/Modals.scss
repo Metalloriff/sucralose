@@ -2,38 +2,44 @@
 
 .BaseModal {
 	position: relative;
-	
+
 	width: 800px;
 	max-width: 90vw;
 	height: 600px;
 	max-height: 90vh;
-	
+
 	border-radius: $secondaryBorderRadius;
 	padding: 10px;
-	
+
 	overflow-x: hidden;
 	overflow-y: auto;
 }
 
 .ModalStack {
 	position: fixed;
-	top: 0; left: 0; bottom: 0; right: 0;
-	
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+
 	z-index: 10000;
-	
+
 	> .ModalContainer {
 		position: fixed;
-		top: 0; left: 0; bottom: 0; right: 0;
-		
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		
+
 		animation-name: ModalAttach;
 		animation-timing-function: steps(60);
 		animation-duration: 150ms;
 		animation-fill-mode: forwards;
-		
+
 		&.Closing {
 			animation-name: ModalDetach;
 			animation-timing-function: steps(60);
@@ -41,11 +47,11 @@
 			animation-fill-mode: forwards;
 		}
 	}
-	
+
 	will-change: background-color;
 	transition: background-color 150ms steps(40);
 	pointer-events: none;
-	
+
 	&.Active {
 		background-color: rgba(black, 0.5);
 		pointer-events: all;
@@ -77,94 +83,104 @@
 }
 
 .ClipboardModal {
-	 overflow: hidden;
-	 color: white;
-	 font-size: 1.5em;
+	overflow: hidden;
+	color: white;
+	font-size: 1.5em;
 
-	 padding: 20px;
-	 border-radius: $primaryBorderRadius;
+	padding: 20px;
+	border-radius: $primaryBorderRadius;
 
-	 height: 30px;
- }
+	height: 30px;
+}
 
 .ImageModal {
 	width: 90vw;
 	height: 90vh;
-	
+
 	display: flex;
 	flex-direction: column;
-	
+
 	align-items: center;
 	justify-content: center;
-	
+
 	.ImageContainer {
 		position: relative;
 		background-color: $primaryBG;
-		
+
 		max-height: 80vh;
 
-		img, video {
+		img,
+		video {
 			max-width: 90vw;
 			height: 100%;
 
 			object-fit: contain;
-			
-			&.Previous, &.Next {
+
+			transform: translateX(calc(1% * var(--translation)));
+			transition: transform 100ms linear;
+
+			&.Previous,
+			&.Next {
 				position: absolute;
-				
+
 				filter: brightness(0.4);
 			}
-			
+
 			&.Previous {
-				transform: translateX(-100%) scale(0.8);
+				transform: translateX(calc(calc(1% * var(--translation)) - 100%))
+					scale(calc(calc(var(--translation) / 800) + 0.8));
+
+				filter: brightness(calc(calc(var(--translation) / 200) + 0.4));
 			}
-			
+
 			&.Next {
-				transform: scale(0.8);
+				transform: translateX(calc(1% * var(--translation))) scale(calc(calc(var(--translation) / -800) + 0.8));
+
+				filter: brightness(calc(calc(var(--translation) / -200) + 0.4));
 			}
 		}
-		
+
 		video {
 			pointer-events: all;
-			
+
 			z-index: 10;
 		}
-		
+
 		&.Expanded {
 			height: 80vh;
 		}
 	}
-	
+
 	.Footer {
 		display: flex;
 		margin-top: 25px;
-		
+
 		align-items: center;
 		justify-content: center;
-		
+
 		background-color: $primaryBG;
 		padding: 10px;
-		
+
 		.Divider {
 			background-color: $primaryHover;
-			
+
 			width: 2px;
 			height: 30px;
-			
+
 			border-radius: 100px;
-			
+
 			margin: 0 10px;
 		}
-		
+
 		.Filename {
 			margin: 0 10px;
 		}
-		
+
 		.Button {
 			padding: 5px 10px;
-			
+
 			cursor: pointer;
-			
+
 			&.Disabled {
 				opacity: 0.15;
 				cursor: not-allowed;
@@ -173,7 +189,8 @@
 	}
 }
 
-.BoolModal, .StringModal {
+.BoolModal,
+.StringModal {
 	position: relative;
 	font-size: 1.2em;
 
@@ -236,8 +253,12 @@
 
 			cursor: pointer;
 
-			&:First-Child { margin-right: 10px; }
-			&:Last-Child { margin-left: 10px; }
+			&:first-child {
+				margin-right: 10px;
+			}
+			&:last-child {
+				margin-left: 10px;
+			}
 		}
 	}
 }
@@ -252,29 +273,32 @@
 
 .LoadingModal {
 	position: relative;
-	
+
 	width: 250px;
 	height: 270px;
 	padding: 20px 0;
-	
+
 	border-radius: $secondaryBorderRadius;
-	
+
 	.LoadingCrescentContainer {
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
 	}
-	
+
 	.Title {
 		position: absolute;
-		left: 0; bottom: 10px; right: 0;
-		
+		left: 0;
+		bottom: 10px;
+		right: 0;
+
 		text-align: center;
 	}
 }
 
 #root .Mobile {
-	.BoolModal, .StringModal {
+	.BoolModal,
+	.StringModal {
 		width: 80vw;
 	}
 }

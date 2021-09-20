@@ -4,100 +4,105 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	
+
 	.NoComments {
 		position: relative;
-		
+
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		
+
 		.Kermit {
 			color: var(--txt-color);
 			opacity: 0.3;
-			
+
 			width: 400px;
 			height: 400px;
+
+			max-width: 80vw;
 		}
 	}
-	
+
 	.Comments {
 		width: 900px;
 		max-width: 100vw;
 	}
-	
+
 	.Comment {
 		display: flex;
 		padding: 50px;
-		
+
 		.UserSection {
 			.AvatarContainer {
 				position: relative;
 				overflow: hidden;
-				
+
 				width: 150px;
 				height: 150px;
-				
+
 				.AvatarPlaceholder {
 					position: absolute;
-					top: 0; left: 0; bottom: 0; right: 0;
-					
+					top: 0;
+					left: 0;
+					bottom: 0;
+					right: 0;
+
 					background-color: rgba(black, 0.35);
 					backdrop-filter: blur(5px);
-					
+
 					z-index: -1;
-					
+
 					> svg {
 						width: 60px;
 						height: 60px;
 					}
 				}
-				
+
 				.Avatar {
 					width: 100%;
 					height: 100%;
-					
+
 					object-fit: cover;
 					cursor: pointer;
-					
+
 					&.NSFW {
 						filter: blur(10px);
 						transform: scale(1.3);
 					}
-					
+
 					transition: transform $ft, filter $ft;
-					
-					&:Hover {
+
+					&:hover {
 						transform: scale(1.025);
 						filter: none;
 					}
 				}
 			}
 		}
-		
+
 		.BodySection {
 			margin-left: 20px;
 			flex-grow: 1;
-			
+
 			.Username {
 				color: $primaryColor;
 				font-weight: bolder;
 				cursor: pointer;
 			}
-			
+
 			textarea.Body {
 				flex-grow: 1;
-				
+
 				width: 100%;
 				padding: 10px;
-				
+
 				resize: none;
 				border: none;
 				outline: none;
-				
+
 				color: var(--txt-color);
-				
+
 				background-color: rgba(black, 0.2);
 				backdrop-filter: blur(5px);
 			}
