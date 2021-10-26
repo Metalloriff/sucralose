@@ -12,8 +12,13 @@
 		}
 	}
 
-	.SearchFieldContainer {
+	.SearchFieldContainer,
+	.SwitchItem {
 		width: 600px;
+	}
+
+	.SwitchItem > h4 {
+		margin-right: auto;
 	}
 
 	.ButtonsContainer {
@@ -44,7 +49,7 @@
 			cursor: pointer;
 			transition: color $ft, background-color $ft;
 
-			&:Hover {
+			&:hover {
 				color: white;
 				background-color: $primaryColor;
 			}
@@ -54,19 +59,19 @@
 			}
 		}
 	}
-	
+
 	.News {
 		margin: 80px 0;
 		padding: 10px;
-		
+
 		.Title {
 			margin-top: 0;
 			color: $primaryColor;
 		}
-		
+
 		.Poster {
 			margin-left: auto;
-			
+
 			> b {
 				color: $primaryColor;
 			}
@@ -74,30 +79,28 @@
 
 		cursor: pointer;
 		transition: background-color $ft, backdrop-filter $ft;
-		
-		&:Hover {
+
+		&:hover {
 			background-color: rgba(black, 0.2);
 			backdrop-filter: blur(5px);
 		}
 	}
-	
+
 	.UseAModernWebBrowserThatActuallySupportsBackdropFilterAndOtherFeaturesFromMoreThan5YearsAgo {
 		color: var(--cf-red);
 		text-align: center;
-		
+
 		margin-top: 50px;
-		
-		a:Not(:First-Child) {
+
+		a:not(:first-child) {
 			margin-left: 10px;
 		}
 	}
 }
 
 #root .Mobile .MainPage {
-	.SearchFieldContainer {
-		width: 80vw;
-	}
-
+	.SearchFieldContainer,
+	.SwitchItem,
 	.ButtonsContainer {
 		width: 80vw;
 	}

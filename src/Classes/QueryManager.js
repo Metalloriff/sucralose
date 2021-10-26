@@ -1,38 +1,44 @@
-﻿function fromEntries(entries) {
-    const obj = { };
-    
-    for (const [key, value] of entries) {
-        obj[key] = value;
-    }
-    
-    return obj;
+﻿import { ActionTypes } from "./Constants";
+import { dispatcher } from "./Dispatcher";
+import Store from "./Store";
+
+const QueryStoreClass = class QueryStore extends Store {
+	get query() {
+		return Object.fromEntries(
+			new URLSearchParams(window.location.search)
+		);
+	}
+
+	get(key, def = null) {
+		return this.query[key] ?? def;
+	}
+
+	set(key, value, options = {}) {
+		const query = new URLSearchParams(window.location.search);
+		value === null ? query.delete(key) : query.set(key, value);
+
+		dispatcher.dispatch({
+			type: ActionTypes.UPDATE_QUERY,
+			query: "?" + query.toString(),
+			options
+		});
+	}
 }
 
-export default new class QueryManager {
-    get query() {
-        return fromEntries(
-            new URLSearchParams(window.location.search)
-        );
-    }
-    
-    get(key, def = null) {
-        return this.query[key] ?? def;
-    }
-    
-    set(key, value, options = {}) {
-        const {
-            pushHistory = true
-        } = options;
-        
-        const query = new URLSearchParams(window.location.search);
-        value === null ? query.delete(key) : query.set(key, value);
-        
-        const url = window.location.href.replace(
-            window.location.search,
-            "?" + query.toString()
-        );
+const QueryStore = new QueryStoreClass(dispatcher, {
+	[ActionTypes.UPDATE_QUERY]: ({ query, options }) => {
+		const {
+			pushHistory = true
+		} = options;
 
-        window.history[pushHistory ? "pushState" : "replaceState"]({ }, null, url);
-        window.dispatchEvent(new Event("popstate"));
-    }
-}
+		dispatcher.dispatch({
+			type: ActionTypes.UPDATE_ROUTE,
+			replace: !pushHistory,
+			path: query
+		});
+	},
+
+	[ActionTypes.UPDATE_PAGE]: () => { }
+});
+
+export default QueryStore;

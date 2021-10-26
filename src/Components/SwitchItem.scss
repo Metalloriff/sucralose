@@ -1,55 +1,61 @@
 ﻿@import "../Variables";
 
 .SwitchItem {
-  display: flex;
-  
-  margin: 10px;
-  margin-left: 0;
-  
-  .Title {
-    margin-right: 10px;
-    margin-top: 1px;
-  }
-  
-  .Switch {
-    outline: none;
-    border: none;
-    -webkit-appearance: none;
+	display: flex;
 
-    position: relative;
-    cursor: pointer;
+	margin: 10px;
+	margin-left: 0;
+	gap: 5px;
+	font-size: 0.85em;
 
-    background-color: rgba(black, 0.25);
+	.Title {
+		margin-right: 10px;
+		margin-top: 1px;
+	}
 
-    width: 40px;
-    height: 20px;
-    border-radius: 20px;
+	h4 {
+		margin: 0;
+	}
 
-    &:Checked {
-      background-color: $primaryColor;
+	.Switch {
+		outline: none;
+		border: none;
+		-webkit-appearance: none;
 
-      &:After {
-        transform: translateX(125%);
-      }
-    }
+		position: relative;
+		cursor: pointer;
 
-    transition: background-color $ft;
+		background-color: rgba(black, 0.25);
 
-    &::After {
-      content: "";
-      display: block;
+		width: 40px;
+		height: 20px;
+		border-radius: 20px;
 
-      position: absolute;
-      top: 2px;
-      left: 2.5px;
+		&:checked {
+			background-color: $primaryColor;
 
-      width: 15px;
-      height: 15px;
+			&:after {
+				transform: translateX(125%);
+			}
+		}
 
-      background-color: white;
-      border-radius: 15px;
+		transition: background-color $ft;
 
-      transition: transform $ft;
-    }
-  }
+		&::after {
+			content: "";
+			display: block;
+
+			position: absolute;
+			top: 2px;
+			left: 2.5px;
+
+			width: 15px;
+			height: 15px;
+
+			background-color: white;
+			border-radius: 15px;
+
+			transition: transform $ft;
+		}
+	}
 }

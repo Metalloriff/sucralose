@@ -2,15 +2,15 @@
 
 :root {
 	--primary-color: #7bb1bd;
-	--secondary-color: #BD7BA2;
-	
+	--secondary-color: #bd7ba2;
+
 	--primary-bg: #2c3946;
 	--secondary-bg: #364758;
 	--tertiary-bg: #42566a;
-	
+
 	--primary-border-radius: 4px;
 	--secondary-border-radius: 7px;
-	
+
 	--red: #be7d7d;
 	--orange: #bd987e;
 	--yellow: #c5c387;
@@ -18,9 +18,9 @@
 	--blue: #7cb2bd;
 	--purple: #9a88bf;
 	--pink: #be7aa1;
-	
+
 	--txt-color: #c3ccd4;
-	
+
 	--post-column-count: 4;
 }
 
@@ -49,7 +49,8 @@ body {
 	scrollbar-color: $primaryColor rgba(black, 0.1);
 }
 
-.App, .Main {
+.App,
+.Main {
 	min-height: 100vh;
 }
 
@@ -94,22 +95,26 @@ a {
 }
 
 @keyframes spinner {
-	from { transform: rotateZ(0deg); }
-	to { transform: rotateZ(360deg); }
+	from {
+		transform: rotateZ(0deg);
+	}
+	to {
+		transform: rotateZ(360deg);
+	}
 }
 
 #root input[type="range"] {
 	appearance: none;
 	border: none;
 	outline: none;
-	
+
 	background-color: $secondaryBG;
-	
+
 	height: 7px;
 	padding: 0;
-	
+
 	border-radius: 100px;
-	
+
 	&::-webkit-slider-thumb {
 		appearance: none;
 
@@ -123,46 +128,49 @@ a {
 
 .AppBackground {
 	position: fixed;
-	top: 0; left: 0; bottom: 0; right: 0;
-	
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+
 	background-repeat: no-repeat;
 	background-size: cover;
-	
+
 	z-index: -10;
 	opacity: 0;
-	
+
 	transition: opacity $t;
 }
 
 #root .ScrollIndicator {
 	position: fixed;
-	
+
 	bottom: 60px;
 	right: 60px;
-	
+
 	width: 60px;
 	height: 60px;
-	
+
 	color: $primaryColor;
-	
+
 	background-color: rgba(black, 0.5);
 	border: 2px solid currentColor;
-	
+
 	backdrop-filter: blur(5px);
 	border-radius: 100%;
-	
+
 	z-index: 1000;
 	cursor: pointer;
-	
+
 	> svg {
 		width: 30px;
 		height: 30px;
 	}
-	
+
 	transform: translateY(200px);
 	transition: transform $t;
 	will-change: transform;
-	
+
 	&.Active {
 		transform: none;
 	}
