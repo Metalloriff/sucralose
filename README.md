@@ -18,7 +18,7 @@ Managing sets is a disaster, you have to visit posts to vote/favorite them, UI f
 And also, I just enjoy making things, and e621 provides a pretty good and easy-to-understand API.
 
 ## GitHub Pages
-You can visit the site at https://metalloriff.github.io/sucralose/ .
+You can visit the site at https://sucralose.top/ .
 
 ## Installing
 If you wish to fork or download this repo, simply run `npm i` to install its dependencies,

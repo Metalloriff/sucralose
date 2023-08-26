@@ -1,5 +1,9 @@
 ﻿@import "../../Variables";
 
+.Desktop .Post {
+	box-shadow: 0 0 14px rgba(black, 0.2);
+}
+
 .Post {
 	position: relative;
 	height: calc(1100px / var(--post-column-count));
@@ -8,37 +12,38 @@
 	flex-direction: column;
 
 	background-color: $secondaryBG;
-	box-shadow: 0 0 14px rgba(black, 0.2);
-
+	
+	border-radius: var(--secondary-border-radius);
 	overflow: hidden;
 
 	.PostHeader {
 		position: absolute;
-		left: 0; right: 0;
+		left: 0;
+		right: 0;
 		z-index: 1;
-		
+
 		background-color: rgba(black, 0.5);
 		backdrop-filter: blur(5px);
-		
+
 		display: flex;
 		flex-wrap: wrap;
 		padding: 7px;
-		
+
 		.Divider {
 			border-right: 2px solid var(--txt-color);
 			margin: 0 6px;
 		}
-		
+
 		.TagItem {
 			margin-right: 7px;
-			
-			&:Not(:Last-Child)::After {
+
+			&:not(:last-child)::after {
 				content: ",";
 				color: var(--txt-color);
 			}
 		}
 	}
-	
+
 	.ContextMenuWrapper {
 		width: 100%;
 		min-height: 100%;
@@ -53,30 +58,33 @@
 
 		transition: transform $ft;
 
-		&:Hover {
+		&:hover {
 			transform: scale(1.025);
 		}
-		
+
 		&.Loading {
 			align-items: center;
 			justify-content: center;
-			
+
 			background-color: rgba(black, 0.5);
 		}
 	}
-	
+
 	.VideoOverlay {
 		position: absolute;
-		top: 0; left: 0; bottom: 0; right: 0;
-		
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+
 		background-color: rgba(black, 0.5);
-		
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		
+
 		pointer-events: none;
-		
+
 		svg {
 			width: 60px;
 			height: 60px;
@@ -100,7 +108,7 @@
 		justify-content: center;
 
 		color: white;
-		
+
 		&.RightSide {
 			left: unset;
 			right: 0;
@@ -124,6 +132,7 @@
 
 		.Button {
 			padding: 7px;
+			gap: 5px;
 
 			display: flex;
 			align-items: center;
@@ -134,13 +143,11 @@
 			svg {
 				width: 20px;
 				height: 20px;
-
-				margin-right: 5px;
 			}
 
 			transition: color $ft;
 
-			&:Hover {
+			&:hover {
 				color: white;
 			}
 
@@ -158,13 +165,13 @@
 
 			height: 3px;
 			background-color: var(--red);
-			
+
 			margin-bottom: -2px;
 
 			.UpVotes {
 				height: 3px;
 				background-color: var(--green);
-				
+
 				margin-top: -2px;
 			}
 		}
@@ -176,11 +183,15 @@
 
 	margin: 100px 0;
 	text-align: center;
-	
+
 	svg {
 		display: block;
-		
+
 		width: 60px;
 		height: 60px;
 	}
+}
+
+.ContextMenuItem:hover a {
+	color: white;
 }

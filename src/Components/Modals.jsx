@@ -1,5 +1,6 @@
 import React from "react";
 import * as Feather from "react-feather";
+import { Loader } from "react-feather";
 import { ActionTypes, getRandomKey, joinClassNames } from "../Classes/Constants";
 import { dispatcher } from "../Classes/Dispatcher";
 import { useEventListener, useOnUnmount } from "../Classes/Hooks";
@@ -48,7 +49,7 @@ export async function copyToClipboard(text) {
 	}
 }
 
-function ImageComponent({ image, setLoaded, setFailed, className, onClick }) {
+function ImageComponent({ image, setLoaded, setFailed, className, onClick, isPreview = false }) {
 	const ref = React.useRef();
 	const [loaded, _setLoaded] = React.useState(false);
 
@@ -66,13 +67,14 @@ function ImageComponent({ image, setLoaded, setFailed, className, onClick }) {
 
 	if (!image) return null;
 
-	return /\.webm$/.test(image.full)
+	return /\.webm$/.test(image.full) && !isPreview
 		? <video
 			ref={ref}
 			src={image.full}
 			controls={!className}
 			loop
 			muted
+			autoPlay={!isPreview}
 			className={className}
 			{...events}
 		/> : (
@@ -80,8 +82,14 @@ function ImageComponent({ image, setLoaded, setFailed, className, onClick }) {
 				<img src={image.preview} alt="Preview failed to load"
 					style={{ display: loaded && !className ? "none" : null }} className={className} />
 
-				{!className && <img src={image.full} alt="Image failed to load" className={className}
+				{!className && !isPreview && <img src={image.full} alt="Image failed to load" className={className}
 					style={{ display: loaded ? null : "none" }} {...events} />}
+
+				{!isPreview && !loaded && (
+					<div className="LoadingIndicator FlexCenter">
+						<Loader className="Spinner" />
+					</div>
+				)}
 			</>
 		);
 }
@@ -155,8 +163,12 @@ export function ImageModal({ url, getSources, buttons }) {
 	useEventListener("keydown", ({ key }) => {
 		switch (key) {
 			case "Escape": return Modals.pop();
-			case "ArrowLeft": return nav(-1);
-			case "ArrowRight": return nav(1);
+			case "ArrowLeft": case "a": return nav(-1);
+			case "ArrowRight": case "d": return nav(1);
+			// This is bad practice. Don't do this.
+			case "ArrowUp": case "w": return window.currentModalEvents?.vote(1);
+			case "ArrowDown": case "s": return window.currentModalEvents?.vote(-1);
+			case "f": return window.currentModalEvents?.favorite();
 		}
 	}, { dependencies: [index] });
 
@@ -231,6 +243,7 @@ export function ImageModal({ url, getSources, buttons }) {
 
 					className="Previous"
 					onClick={() => nav(-1)}
+					isPreview
 				/>
 
 				<ImageComponent
@@ -248,6 +261,7 @@ export function ImageModal({ url, getSources, buttons }) {
 
 					className="Next"
 					onClick={() => nav(1)}
+					isPreview
 				/>
 			</div>
 

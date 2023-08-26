@@ -1,13 +1,16 @@
 ﻿import _ from "lodash";
-import React from "react";
+import React, { useReducer } from "react";
 import * as Feather from "react-feather";
+import { Edit2, Trash } from "react-feather";
 import { ActionTypes, getRandomKey } from "../Classes/Constants";
 import Database from "../Classes/Database";
 import { dispatcher } from "../Classes/Dispatcher";
 import UserStore from "../Classes/Stores/UserStore";
 import Header from "../Components/General/Header";
 import InlineLoading from "../Components/InlineLoading";
-import { Modals } from "../Components/Modals";
+import LinkWrapper from "../Components/LinkWrapper";
+import { Modals, openBoolModal } from "../Components/Modals";
+import CreateBlacklistModal from "../Components/Modals/CreateBlacklistModal";
 import TutorialModal from "../Components/Modals/TutorialModal";
 import Toasts from "../Components/Toasts";
 import Tooltip from "../Components/Tooltip";
@@ -131,6 +134,121 @@ function ApiKeySection() {
 	) : null;
 }
 
+export function SubscriptionsSection() {
+	const localUser = UserStore.useState(() => UserStore.getLocalUser());
+	const [subscriptions, setSubscriptions] = React.useState([]);
+	const [busy, setBusy] = React.useState(false);
+
+	React.useEffect(() => {
+		if (localUser?.subscriptions) {
+			setSubscriptions(localUser.subscriptions);
+		}
+	}, [localUser]);
+
+	React.useEffect(() => {
+		if (localUser?.signedIn && !_.isEqual(localUser.subscriptions, subscriptions) && busy) {
+			_.merge(localUser, { subscriptions });
+
+			Database.update(
+				Database.doc("users", localUser.uid),
+				{ subscriptions }
+			).then(() => {
+				Toasts.showToast("Subscriptions updated", "Success");
+
+				setBusy(false);
+			});
+		}
+	}, [subscriptions, busy]);
+
+	return localUser?.signedIn ? (
+		<div className="Section TagsManager Subscriptions">
+			<h1>Subscribed Tags</h1>
+
+			<div className="Tags Flex">
+				{subscriptions.map(tag => (
+					<div className="Tag FlexCenter" key={tag}>
+						<LinkWrapper href={`/posts?search=${tag}`}>{tag}</LinkWrapper>
+
+						<Feather.X
+							onClick={() => {
+								setBusy(true);
+								setSubscriptions(subscriptions.filter(t => t !== tag));
+							}}
+						/>
+					</div>
+				))}
+
+				<input
+					key={subscriptions.length}
+
+					className="TagField"
+					placeholder="Add tag"
+
+					onBlur={e => {
+						if (!e.target.value.trim()) return;
+
+						setBusy(true);
+						setSubscriptions([...subscriptions, e.target.value.trim()]);
+
+						e.target.value = "";
+					}}
+				/>
+			</div>
+		</div>
+	) : null;
+}
+
+export function BlacklistsSection() {
+	const localUser = UserStore.useState(() => UserStore.getLocalUser());
+	const blacklists = UserStore.useState(() => UserStore.getLocalUser()?.blacklists);
+
+	const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+	const events = {
+		edit: index => {
+			Modals.push(<CreateBlacklistModal edit={blacklists[index]} index={index} callback={forceUpdate} />)
+		},
+		delete: index => {
+			openBoolModal({
+				title: "Are you sure?",
+				description: `Do you want to delete blacklist '${blacklists[index].name}?' This cannot be undone.`
+			}).then(r => {
+				if (!r) return;
+
+				localUser.blacklists.splice(index, 1);
+				Database.update(
+					Database.doc("users", localUser.uid),
+					{
+						blacklists: localUser.blacklists,
+						currentBlacklist: "defaults.none"
+					}
+				).then(forceUpdate);
+			});
+		}
+	};
+
+	return localUser?.signedIn ? (
+		<div className="Section BlacklistsSection">
+			<h1>Blacklists</h1>
+
+			{blacklists.map(({ name, tags }, index) => (
+				<div className="Blacklist" key={getRandomKey()}>
+					<h3>{name}</h3>
+
+					<p>
+						{tags.split("\n").map(tag => <div key={tag}>{tag}</div>)}
+					</p>
+
+					<div className="FooterButtons">
+						<Edit2 className="FooterButton" onClick={() => events.edit(index)} />
+						<Trash className="FooterButton" onClick={() => events.delete(index)} />
+					</div>
+				</div>
+			))}
+		</div>
+	) : null;
+}
+
 export default function SettingsPage() {
 	const updateDeBouncer = _.debounce(() => dispatcher.dispatch({ type: ActionTypes.UPDATE_SETTINGS }), 200);
 	const saveDeBouncer = _.debounce(Settings.save.bind(Settings), 2000);
@@ -206,6 +324,8 @@ export default function SettingsPage() {
 			</div>
 
 			<ApiKeySection />
+			<SubscriptionsSection />
+			<BlacklistsSection />
 
 			{Object.entries(Settings.props).map(([categoryName, props]) => (
 				<div className="Section" key={categoryName}>
@@ -290,10 +410,12 @@ export const Settings = new class Settings {
 		}
 	};
 
-	props = _.merge({}, this.defaults);
+	props = _.extend({}, this.defaults);
 
 	async save() {
 		const localUser = UserStore.getLocalUser();
+
+		console.trace();
 
 		for (const categoryName in this.props) {
 			for (const name in this.props[categoryName]) {
@@ -303,10 +425,17 @@ export const Settings = new class Settings {
 			}
 		}
 
-		await Database.update(
-			Database.doc("users", localUser.uid),
-			{ settings: localUser.settings }
-		)
+		const promise = await Database.getDoc(Database.doc("users", localUser.uid))
+			? Database.update(
+				Database.doc("users", localUser.uid),
+				{ settings: localUser.settings }
+			)
+			: Database.set(
+				Database.doc("users", localUser.uid),
+				{ settings: localUser.settings }
+			);
+
+		await promise
 			.then(() => Toasts.showToast("Settings updated on the database"))
 			.catch(err => (console.error(err), Toasts.showToast("An unknown error occurred while saving settings", "Failure")));
 	}

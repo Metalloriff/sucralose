@@ -8,11 +8,11 @@ import { Settings } from "../../Pages/SettingsPage";
 import ContextMenu from "../ContextMenuHandler";
 import InlineLoading from "../InlineLoading";
 import LinkWrapper from "../LinkWrapper";
-import { copyToClipboard, Modals, openImageModal } from "../Modals";
+import { Modals, copyToClipboard, openImageModal } from "../Modals";
 import CreateSetModal from "../Modals/CreateSetModal";
 import Tooltip from "../Tooltip";
 import "./Post.scss";
-import { PostsContext } from "./Posts";
+import { PostsContext, postFilter } from "./Posts";
 import TagItem from "./TagItem";
 
 /**
@@ -34,7 +34,8 @@ export default function Post({ post }) {
 		flags,
 		created_at,
 		rating,
-		tags
+		tags,
+		pools
 	} = post;
 
 	// Get the preview image URL without fail.
@@ -59,12 +60,12 @@ export default function Post({ post }) {
 			};
 
 			return (
-				<div className={joinClassNames("Button", className)} {...events}>
+				<div className={joinClassNames("Button", "FlexCenter", className)} {...events}>
 					{~busyButtons.indexOf(tooltipText)
 						? <Feather.Loader className="Spinner" />
 						: children}
 
-					<span>{text}</span>
+					{text && <span>{text}</span>}
 				</div>
 			);
 		}, [busyButtons]);
@@ -84,9 +85,12 @@ export default function Post({ post }) {
 			if (is_favorited)
 				// Remove the post from the favorites list.
 				API.removeFavorite(id).then(() => (post.is_favorited = false, clear()));
-			else
+			else {
 				// Add the post to the favorites list.
 				API.favorite(id).then(() => (post.is_favorited = true, clear()));
+
+				events.vote(1);
+			}
 		},
 		vote: score => {
 			// Mark the button as busy.
@@ -116,7 +120,7 @@ export default function Post({ post }) {
 			// Download the post.
 			download(file.url).then(clear);
 		},
-		openInNewTab: () => window.open(`#post/${id}`, "_blank")
+		openInNewTab: () => window.open(`post/${id}`, "_blank")
 	};
 
 	const conditionalDnp = tags.artist.indexOf("conditional_dnp");
@@ -154,7 +158,7 @@ export default function Post({ post }) {
 							onLoad={() => setPreviewLoaded(true)}
 							onClick={() =>
 								openImageModal(file.url, () =>
-									context.posts.map(post => ({
+									context.posts.filter(postFilter).map(post => ({
 										preview: post.sample?.url ?? post.preview?.url ?? post.file?.url,
 										full: post.file.url
 									})), {
@@ -201,13 +205,36 @@ export default function Post({ post }) {
 							<Feather.Heart />
 						</Button>
 
-						<div style={{ marginLeft: "auto" }} className="Flex">
+						<div style={{ position: "absolute", right: 5 }} className="Flex">
+							{pools?.length > 0 && (
+								<ContextMenu.Wrapper menu={<PoolContextMenu pools={pools} />}>
+									<Button
+										tooltipText="Pools"
+										tooltipSide="right"
+
+										onClick={e => (
+											e = _.cloneDeep(e),
+											setTimeout(() => (
+												e.currentTarget.parentElement.dispatchEvent(
+													new MouseEvent("contextmenu", {
+														...e,
+														bubbles: true
+													})
+												)
+											), 0)
+										)}
+									>
+										<Feather.Hash />
+									</Button>
+								</ContextMenu.Wrapper>
+							)}
+
 							<Button tooltipText="Download" tooltipSide="right"
 								onClick={events.download}>
 								<Feather.Download />
 							</Button>
 
-							<LinkWrapper href={`#post/${id}`}>
+							<LinkWrapper href={`post/${id}`}>
 								<Button tooltipText="View Post" tooltipSide="right">
 									<Feather.ExternalLink />
 								</Button>
@@ -331,14 +358,19 @@ export function PostModalButtons({ post }) {
 			if (is_favorited)
 				// Remove the post from the favorites list.
 				API.removeFavorite(id).then(() => (post.is_favorited = false, forceUpdate()));
-			else
+			else {
 				// Add the post to the favorites list.
 				API.favorite(id).then(() => (post.is_favorited = true, forceUpdate()));
+
+				events.vote(1);
+			}
 		},
 		vote: score =>
 			API.vote(id, score).then(data => (_.extend(post.score, data), forceUpdate())),
 		download: () => download(file.url)
-	}
+	};
+
+	window.currentModalEvents = events;
 
 	return (
 		<React.Fragment>
@@ -379,5 +411,44 @@ export function PostModalButtons({ post }) {
 				<Tooltip style={{ color: "var(--txt-color)" }}>Download</Tooltip>
 			</div>
 		</React.Fragment>
+	);
+}
+
+export function PoolContextMenu({ pools }) {
+	const [ready, setReady] = React.useState(false);
+	const [data, setData] = React.useState(null);
+
+	React.useEffect(() => {
+		Promise.all(pools.map(poolId => {
+			return API.request(`/pools/${poolId}`);
+		})).then(data => {
+			setData(data);
+			setReady(true);
+		});
+	}, [pools]);
+
+	return ready ? (
+		<ContextMenu>
+			{data.map(pool => (
+				<ContextMenu.Item
+					key={pool.id}
+				>
+					<a href={`/posts?search=pool:${pool.id}`}>
+						<div>
+							<div><b>{pool.name.replaceAll("_", " ")}</b></div>
+							<div style={{ color: "var(--secondary-color)" }}>
+								{pool.post_count} post{pool.post_count !== 1 && "s"}
+							</div>
+						</div>
+					</a>
+				</ContextMenu.Item>
+			))}
+		</ContextMenu>
+	) : (
+		<ContextMenu>
+			<ContextMenu.Item>
+				<InlineLoading />
+			</ContextMenu.Item>
+		</ContextMenu>
 	);
 }

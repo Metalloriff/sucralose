@@ -51,7 +51,7 @@ export default new class E621API {
 	async request(sub, args = {}, json = true, restOptions = {}) {
 		// Rate limit for requests made.
 		while (Date.now() - this.lastMadeRequest < 500)
-			await new Promise(r => setTimeout(r, 100));
+			await new Promise(r => setTimeout(r, 50));
 		// Set the last made request to the current time.
 		this.lastMadeRequest = Date.now();
 

@@ -23,6 +23,26 @@ export function joinClassNames() {
 	return final.trim();
 }
 
+export function openFileDialog(options = {}) {
+	return new Promise(r => {
+		const { type = "*", multiple = false } = options;
+		const input = _.assign(document.createElement("input"), {
+			type: "file",
+			accept: type,
+			style: "display:none",
+			multiple,
+			onchange: () => (
+				r(input.files),
+
+				document.body.removeChild(input)
+			)
+		});
+
+		document.body.appendChild(input);
+		input.click();
+	});
+}
+
 export function download(uri) {
 	return fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(uri)}`)
 		.then(res => res.blob())

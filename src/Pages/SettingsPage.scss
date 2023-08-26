@@ -78,6 +78,91 @@
 				}
 			}
 		}
+
+		&.TagsManager {
+			> .Tags {
+				flex-wrap: wrap;
+				gap: 7px;
+			}
+
+			.Tag {
+				background: $primaryColor;
+				color: white;
+
+				padding: 2px 6px;
+				gap: 3px;
+
+				> .LinkWrapper {
+					cursor: pointer !important;
+
+					&:hover {
+						text-decoration: underline !important;
+					}
+				}
+
+				> svg {
+					margin-right: -5px;
+
+					width: 20px;
+					height: 20px;
+
+					cursor: pointer;
+
+					&:hover {
+						background: rgba(black, 0.2);
+					}
+				}
+			}
+
+			.TagField {
+				border: none;
+				outline: none;
+
+				background: rgba(black, 0.2);
+				color: var(--txt-color);
+
+				padding: 2px 6px;
+				width: 120px;
+
+				&::placeholder {
+					color: var(--txt-color);
+					opacity: 0.75;
+				}
+			}
+		}
+
+		&.BlacklistsSection {
+			.Blacklist {
+				position: relative;
+				background: rgba(black, 0.1);
+				padding: 10px;
+
+				h3 {
+					margin-top: 0;
+				}
+
+				p {
+					margin-bottom: 0;
+				}
+
+				.FooterButtons {
+					position: absolute;
+					top: 0;
+					right: 0;
+					padding: 10px;
+
+					.FooterButton {
+						padding: 5px;
+						cursor: pointer;
+						border-radius: var(--primary-border-radius);
+
+						&:hover {
+							background: rgba(white, 0.05);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

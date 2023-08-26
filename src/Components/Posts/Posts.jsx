@@ -3,7 +3,8 @@ import React from "react";
 import * as Feather from "react-feather";
 import App from "../../App";
 import API from "../../Classes/API";
-import { joinClassNames } from "../../Classes/Constants";
+import { ActionTypes, joinClassNames } from "../../Classes/Constants";
+import { dispatcher } from "../../Classes/Dispatcher";
 import { useEventListener } from "../../Classes/Hooks";
 import QueryManager from "../../Classes/QueryManager";
 import RoutesStore from "../../Classes/Stores/RoutesStore";
@@ -11,8 +12,40 @@ import UserStore from "../../Classes/Stores/UserStore";
 import InlineLoading from "../InlineLoading";
 import { Modals } from "../Modals";
 import TutorialModal from "../Modals/TutorialModal";
+import Toasts from "../Toasts";
 import Post from "./Post";
 import "./Posts.scss";
+
+export function postFilter(post, index) {
+	const localUser = UserStore.getLocalUser();
+	if (!localUser) return;
+
+	const bidx = parseInt(localUser.currentBlacklist);
+	const blacklist = localUser?.blacklists[bidx] ?? [];
+
+	// Handle blacklist
+	if (bidx > -1) {
+		if (!blacklist) {
+			Toasts.showToast("Warning! There was an error finding your blacklist, no posts are filtered currently.", "Failure");
+
+			return true;
+		}
+
+		const postTags = Object.values(post.tags).flat().map(tag => tag.toLowerCase());
+		const blacklistTags = blacklist.tags.split("\n").map(tag => tag.toLowerCase());
+
+		// Add rating as tag
+		postTags.push(`rating:${post.rating}`);
+
+		// Post is blacklisted
+		if (blacklistTags.some(tags => tags.split(" ").filter(Boolean).every(tag => postTags.includes(tag))))
+			return false;
+		// Post is not blacklisted
+		return true;
+	}
+
+	return true;
+}
 
 export let PostsContext = React.createContext({});
 
@@ -31,6 +64,10 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 
 	const searchQuery = QueryManager.useState(() => QueryManager.get("search"));
 	const pageQuery = QueryManager.useState(() => QueryManager.get("page"));
+
+	const localUser = UserStore.useState(() => UserStore.getLocalUser());
+	const currentBlacklist = UserStore.useState(() => UserStore.getLocalUser()?.currentBlacklist);
+	dispatcher.useForceUpdater(ActionTypes.UPDATE_LOCAL_USER);
 
 	React.useEffect(() => {
 		setPosts([]);
@@ -78,7 +115,7 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 				params
 			];
 
-			// I have no clue why this is here.
+			// I have no clue why this is here, but I am too afraid to touch it.
 			if (_.isEqual(lastSuccessfulRequest, _request) && lastHash === RoutesStore.getFormattedRoute()[0])
 				return setFetchingState(false);
 
@@ -136,7 +173,7 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 					const newRequest = _.cloneDeep(req);
 
 					newRequest[1].tags = tagChunk;
-					newRequest[1].limit = Math.max(5, (localUser.e621User.per_page ?? 50) / req[1].tags.length);
+					newRequest[1].limit = Math.max(5, (localUser?.e621User?.per_page ?? 50) / req[1].tags.length);
 
 					const response = await API.request(...newRequest);
 					tempPosts.push(...(response.posts ?? []));
@@ -168,10 +205,7 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 					: resPosts;
 
 			setPosts(
-				_posts.filter(
-					(post, index) =>
-						_posts.findIndex(p => p && p.id === post.id) === index
-				)
+				_posts.filter((post, index) => _posts.findIndex(p => p && p.id === post.id) === index)
 			);
 
 			setSearchQuery(tags);
@@ -194,6 +228,8 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 		}
 	}, { dependencies: [isFetching, posts, request, hasReachedEnd] });
 
+	const filteredPosts = posts.filter(postFilter);
+
 	return (
 		<PostsContext.Provider value={{
 			posts
@@ -201,7 +237,7 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 			<div className="Posts">
 				<h2 className="PageLabel">{App.hash}</h2>
 
-				{!isFetching && !posts?.length && (
+				{!isFetching && !filteredPosts?.length && (
 					<div className="NoPosts">
 						<div className="Placeholder">{emptyPlaceholder ?? (
 							<>
@@ -218,7 +254,7 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 				)}
 
 				<div className="Items">
-					{posts?.map(post => <Post post={post} key={post.id} />)}
+					{filteredPosts?.map(post => <Post post={post} key={post.id} />)}
 				</div>
 
 				{hasReachedEnd && (

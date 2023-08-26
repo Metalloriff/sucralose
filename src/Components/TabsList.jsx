@@ -14,7 +14,7 @@ export default class extends React.Component {
 		return (
 			<div>
 				<div className="TabsList">
-					{ this.props.tabs.map((title, index) => (
+					{this.props.tabs.filter(Boolean).map((title, index) => (
 						<span key={title} className={"TabItem" + (index === this.state.active ? " Active" : "")} onClick={() => {
 							this.setState({ active: index });
 
@@ -22,18 +22,18 @@ export default class extends React.Component {
 								this.props.onChange(title, index, this);
 							}
 						}}>
-							<span className="TabItemTitle">{ title }</span>
-							<div className="TabItemBorder"/>
+							<span className="TabItemTitle">{title}</span>
+							<div className="TabItemBorder" />
 						</span>
-					)) }
+					))}
 				</div>
-					
-				{ children.map((child, i) => (
+
+				{children.map((child, i) => (
 					<div className="TabItem" key={i}
-						 style={{ display: this.state.active === i ? "block" : "none" }}>
-						{ child }
+						style={{ display: this.state.active === i ? "block" : "none" }}>
+						{child}
 					</div>
-				)) }
+				))}
 			</div>
 		);
 	}

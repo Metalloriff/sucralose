@@ -41,14 +41,23 @@ export default function AuthModal() {
 			// Create the user account.
 			createUserWithEmailAndPassword(Database.auth, emailField.value, passwordField.value)
 				// Then navigate to the settings.
-				.then(() => (Modals.pop(), Toasts.showToast("Welcome to Sucralose!", "Success"), dispatcher.dispatch({
-					type: ActionTypes.UPDATE_ROUTE,
-					path: "/settings"
-				})))
+				.then(() => {
+					Modals.pop();
+
+
+					Toasts.showToast("Welcome to Sucralose!", "Success");
+
+					dispatcher.dispatch({
+						type: ActionTypes.UPDATE_ROUTE,
+						path: "/settings"
+					});
+				})
 				// Catch any errors that may have occurred.
 				.catch(e => {
 					Toasts.showToast("An unknown error has occured! Check console for details", "Failure");
 					console.error(e);
+
+					setBusy(false);
 				});
 		},
 		handleLogIn: () => {

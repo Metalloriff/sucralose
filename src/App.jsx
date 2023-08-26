@@ -29,16 +29,16 @@ function PageElement() {
 	// Store the formatted hash in a variable.
 	const [hash, ...args] = RoutesStore.getFormattedRoute();
 
+	// Get local user state
+	const localUser = UserStore.useState(() => UserStore.getLocalUser());
+
 	// If the user is ready but not logged in, open the auth modal.
-	if (App.userReady && !App.user && ~["subscriptions", "favorites", "settings"].indexOf(hash)) {
+	if (localUser?.signedIn === false && (~["subscriptions", "favorites", "settings"].indexOf(hash) || location.hash.includes("sign_in"))) {
 		// Make sure the modal is not already open.
 		if (Modals.instance?.state?.stack?.length === 0) {
 			Modals.push(<AuthModal />);
 		}
 	}
-
-	// Get local user state
-	const localUser = UserStore.useState(() => UserStore.getLocalUser());
 
 	// Zhu Li, do the thing!
 	switch (hash) {

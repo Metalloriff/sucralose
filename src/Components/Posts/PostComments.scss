@@ -12,16 +12,6 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-
-		.Kermit {
-			color: var(--txt-color);
-			opacity: 0.3;
-
-			width: 400px;
-			height: 400px;
-
-			max-width: 80vw;
-		}
 	}
 
 	.Comments {
@@ -29,17 +19,23 @@
 		max-width: 100vw;
 	}
 
+	.CommentCreatorSection {
+		padding-bottom: 25px;
+	}
+
 	.Comment {
 		display: flex;
-		padding: 50px;
+		padding: 10px 50px;
 
 		.UserSection {
 			.AvatarContainer {
 				position: relative;
 				overflow: hidden;
 
-				width: 150px;
-				height: 150px;
+				width: 50px;
+				height: 50px;
+
+				border-radius: 100%;
 
 				.AvatarPlaceholder {
 					position: absolute;
@@ -54,8 +50,8 @@
 					z-index: -1;
 
 					> svg {
-						width: 60px;
-						height: 60px;
+						width: 30px;
+						height: 30px;
 					}
 				}
 
@@ -67,7 +63,7 @@
 					cursor: pointer;
 
 					&.NSFW {
-						filter: blur(10px);
+						filter: blur(3px);
 						transform: scale(1.3);
 					}
 
@@ -78,6 +74,11 @@
 						filter: none;
 					}
 				}
+
+				img {
+					border: none;
+					outline: none;
+				}
 			}
 		}
 
@@ -85,10 +86,16 @@
 			margin-left: 20px;
 			flex-grow: 1;
 
+			user-select: text;
+
 			.Username {
 				color: $primaryColor;
 				font-weight: bolder;
 				cursor: pointer;
+			}
+
+			blockquote {
+				margin-left: 20px;
 			}
 
 			textarea.Body {

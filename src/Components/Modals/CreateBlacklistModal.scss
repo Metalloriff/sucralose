@@ -1,0 +1,33 @@
+@import "../../Variables";
+
+.CreateBlacklistModal {
+	display: flex;
+	flex-direction: column;
+
+	.Footer {
+		margin-top: auto;
+		padding-top: 20px;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 20px;
+
+		.Button {
+			padding: 5px 20px;
+			border-radius: var(--primary-border-radius);
+			background: var(--primary-color);
+			color: white;
+
+			cursor: pointer;
+
+			&.Red {
+				background: var(--cf-red);
+			}
+
+			&:hover {
+				filter: brightness(1.05);
+			}
+		}
+	}
+}

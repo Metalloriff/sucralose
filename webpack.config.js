@@ -7,6 +7,7 @@ const config = require("./package.json").siteProperties;
 // Plugins
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const PwaManifestPlugin = require("webpack-pwa-manifest");
 
 const assetFileExtensions = [
@@ -129,6 +130,11 @@ module.exports = env => ({
 		new webpack.ProvidePlugin({
 			React: "react",
 			ReactDOM: "react-dom"
+		}),
+		new CopyPlugin({
+			patterns: [
+				"src/firebase-messaging-sw.js"
+			]
 		}),
 		new PwaManifestPlugin({
 			name: config.name,

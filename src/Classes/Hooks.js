@@ -1,5 +1,4 @@
 ﻿import React from "react";
-import App from "../App";
 
 /**
  * A setInterval hook for React components.

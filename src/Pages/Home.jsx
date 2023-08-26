@@ -1,5 +1,5 @@
-import React from "react";
 import * as Feather from "react-feather";
+import { Trello } from "react-feather";
 import { joinClassNames } from "../Classes/Constants";
 import RoutesStore from "../Classes/Stores/RoutesStore";
 import UserStore from "../Classes/Stores/UserStore";
@@ -115,6 +115,99 @@ export const newsPosts = [{
 			</TutorialModal>
 		);
 	}
+}, {
+	date: "01/01/2023",
+	title: "Minor QoL Changes and Fixes",
+	modal: function NewsPost01012023() {
+		return (
+			<TutorialModal title={this.title}>
+				<h2>What's different?</h2>
+
+				<p>
+					This was a set of small changes, there's nothing major in this update. In general, I made small changes to the design of the website.
+					I will continue to push this design style in later updates.
+				</p>
+
+				<p>
+					You can now navigate through posts with A and D along with the arrow keys. This makes for easier left-handed controls.
+				</p>
+
+				<p>
+					Fixed a few small bugs mostly related to the post page.
+				</p>
+			</TutorialModal>
+		);
+	}
+}, {
+	date: "08/25/2023",
+	title: "Important! Please Read",
+	modal: function NewsPost08252023() {
+		return (
+			<TutorialModal title={this.title}>
+				<h2>First and foremost</h2>
+
+				<p>
+					This website is not dead, and there is a Trello roadmap available to the public. You can view this underneath the news post you clicked to view this modal.
+				</p>
+
+				<p>
+					However, I have many projects. I work on them in a priority list of what I'm motivated to do, and what I feel needs doing. If you have any suggestions, notice any missing features in Sucralose, or find any pesky bugs, please reach out to my Telegram or Discord (Metalloriff on both). Knowing that someone is waiting for features heavily motivates me to work on whichever project you're waiting for. This does go for my other projects as well.
+				</p>
+
+				<p>
+					That being said, if you are a new user of Sucralose, you notice notice features missing from e621 and are considering leaving. Please reach out to me and I will have it fixed as soon as possible. This is still a work in progress, and a large solo project.
+				</p>
+
+				<h2>Blacklists</h2>
+
+				<p>
+					Blacklist functionality is finally here, along with quick blacklist switching, right below the search bar! The UI is not entirely complete, it's a little ugly and clunky, but should be fully function.
+				</p>
+
+				<h2>What's different?</h2>
+
+				<p>
+					A lot of modal improvements, including a HUGE performance improvement -- the previous and next images used to show full resolution. This is stupid. That includes videos. Now, they show their proper preview image. The image modal has some new controls. Up and down will upvote and downvote, respectively. And F will favorite. Also, there's now a spinner for when the image is loading. This will prevent you from accidentally saving a preview too quickly, without realizing it's a preview. And videos autoplay. A lot of modal improvements, as that's where you spend most of your time.
+				</p>
+
+				<p>
+					Favoriting a post now upvotes it as well. The upvote feature in e621 is underused. If you favorite a post, 9/10 times you'd want to upvote as well. If not, an extra click 1/10 times is better than 9/10!
+				</p>
+
+				<p>
+					Reverse searching is here! Currently it works flawlessly for any files that have an md5 hash in the name. But it is not perfect for improperly named files.
+				</p>
+
+				<p>
+					Pools now show name and description on the search page, instead of.. in a context menu. This is currently a work in progress, so there is no formatting. You'll see a lot of [[this]], and unclickable links. I apologize for that, but I at least made the text selectable so you can search.
+				</p>
+
+				<h2>Patched bugs</h2>
+
+				<p>
+					Personalization settings (background, colors, etc.) weren't saving properly. This should be fully fixed now.
+				</p>
+
+				<p>
+					Not being able to open pools in new tab.
+				</p>
+
+				<p>
+					Clicking on comment profile avatars wouldn't open the avatar post.
+				</p>
+
+				<h2>What's next?</h2>
+
+				<p>
+					Soon, I will be adding a saved searches feature. This will be similar to the quick blacklists feature, but for searching!
+				</p>
+
+				<p>
+					You can see more of what's planned in the future on the roadmap.
+				</p>
+			</TutorialModal>
+		);
+	}
 }];
 
 export function NavigationButtonsComponent({ className, tooltipMode = false }) {
@@ -220,30 +313,6 @@ export default function Home() {
 
 			<NavigationButtonsComponent />
 
-			{window.navigator.userAgent.indexOf("Firefox") !== -1 && (
-				<div className="UseAModernWebBrowserThatActuallySupportsBackdropFilterAndOtherFeaturesFromMoreThan5YearsAgo">
-					<h2>WARNING</h2>
-
-					<div>You're on an unsupported web browser.</div>
-					<div>You will likely experience visual and functional errors.</div>
-					<div>Please do not report these while on an unsupported browser.</div>
-
-					<br />
-
-					<div>Most modern Chromium-based browsers are supported.</div>
-
-					<br />
-
-					<div style={{ color: "var(--txt-color)" }}>
-						<a href="https://www.google.com/chrome/">Chrome</a>,
-						<a href="https://www.opera.com/download">Opera</a>,
-						<a href="https://www.opera.com/gx">Opera GX</a>,
-						<a href="https://brave.com/download/">Brave</a>,
-						<a href="https://www.microsoft.com/en-us/edge">Literally Edge</a>
-					</div>
-				</div>
-			)}
-
 			<div className="News" onClick={() => Modals.push(news.modal())}>
 				<h3 className="Title">{news.title}</h3>
 
@@ -253,6 +322,11 @@ export default function Home() {
 					<div className="Poster">by <b>Metalloriff</b></div>
 				</div>
 			</div>
+
+			<a className="Trello FlexCenter" href="https://trello.com/b/27bqbHA1/roadmap">
+				<Trello />
+				Roadmap
+			</a>
 		</div>
 	);
 }

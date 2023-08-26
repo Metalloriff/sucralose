@@ -4,7 +4,6 @@ import API from "../../Classes/API";
 import { joinClassNames } from "../../Classes/Constants";
 import { useInterval } from "../../Classes/Hooks";
 import UserStore from "../../Classes/Stores/UserStore";
-import { ReactComponent as Kermit } from "../../Icons/Kermit.svg";
 import InlineLoading from "../InlineLoading";
 import LinkWrapper from "../LinkWrapper";
 import "./PostComments.scss";
@@ -35,6 +34,8 @@ export default function PostComments({ id }) {
 		});
 	}, 10000, true);
 
+	console.log(comments);
+
 	return (
 		<div className="PostComments">
 			{comments === null ? (
@@ -42,9 +43,7 @@ export default function PostComments({ id }) {
 			) : (
 				comments.length === 0 ? (
 					<div className="NoComments">
-						<h1>No comment.</h1>
-
-						<Kermit className="Kermit" />
+						<h1>No comments here.</h1>
 					</div>
 				) : (
 					<div className="Comments">
@@ -56,19 +55,21 @@ export default function PostComments({ id }) {
 											<Feather.User />
 										</div>
 
-										<LinkWrapper href={`#post/${comment.avatarPost?.id ?? "not_found"}`}>
-											<img
-												className={joinClassNames("Avatar", [comment.avatarPost?.rating === "e", "NSFW"])}
-												src={comment.avatarPost?.cropped_url}
-												onError={({ target }) => target.src = comment.avatarPost?.preview_url}
-												alt=""
-											/>
-										</LinkWrapper>
+										{comment.avatarPost ? (
+											<LinkWrapper href={`/post/${comment.avatarPost?.id ?? "not_found"}`}>
+												<img
+													className={joinClassNames("Avatar", [comment.avatarPost?.rating === "e", "NSFW"])}
+													src={comment.avatarPost?.cropped_url}
+													onError={({ target }) => target.src = comment.avatarPost?.preview_url}
+													alt=""
+												/>
+											</LinkWrapper>
+										) : null}
 									</div>
 								</div>
 
 								<div className="BodySection">
-									<LinkWrapper href={`#user/${comment.userId}`}>
+									<LinkWrapper href={`/user/${comment.userId}`}>
 										<div className="Username">
 											{comment.username}
 										</div>
@@ -94,14 +95,16 @@ export default function PostComments({ id }) {
 									<Feather.User />
 								</div>
 
-								<LinkWrapper href={`#post/${localUser.e621User.avatarPost?.id ?? "not_found"}`}>
-									<img
-										className={joinClassNames("Avatar", [localUser.e621User.avatarPost?.rating === "e", "NSFW"])}
-										src={localUser.e621User.avatarPost?.cropped_url}
-										onError={({ target }) => target.src = localUser.e621User.avatarPost?.preview_url}
-										alt=""
-									/>
-								</LinkWrapper>
+								{localUser.e621User.avatarPost ? (
+									<LinkWrapper href={`#post/${localUser.e621User.avatarPost?.id ?? "not_found"}`}>
+										<img
+											className={joinClassNames("Avatar", [localUser.e621User.avatarPost?.rating === "e", "NSFW"])}
+											src={localUser.e621User.avatarPost?.cropped_url}
+											onError={({ target }) => target.src = localUser.e621User.avatarPost?.preview_url}
+											alt=""
+										/>
+									</LinkWrapper>
+								) : null}
 							</div>
 						</div>
 

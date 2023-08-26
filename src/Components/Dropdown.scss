@@ -10,6 +10,11 @@
 
 	overflow: hidden;
 	max-height: 42px;
+	border: none;
+	background: var(--txt-color);
+	border-radius: $primaryBorderRadius;
+	padding: 7px;
+	min-width: 200px;
 
 	.DropdownItem {
 		padding: 5px;

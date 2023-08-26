@@ -53,7 +53,7 @@
 	pointer-events: none;
 
 	&.Active {
-		background-color: rgba(black, 0.5);
+		background-color: rgba(black, 0.75);
 		pointer-events: all;
 	}
 }
@@ -105,7 +105,6 @@
 
 	.ImageContainer {
 		position: relative;
-		background-color: $primaryBG;
 
 		max-height: 80vh;
 
@@ -118,6 +117,8 @@
 
 			transform: translateX(calc(1% * var(--translation)));
 			transition: transform 100ms linear;
+			
+			border-radius: var(--secondary-border-radius);
 
 			&.Previous,
 			&.Next {
@@ -151,15 +152,36 @@
 		}
 	}
 
+	.LoadingIndicator {
+		background: $overlay;
+
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+
+		.Spinner {
+			width: 40px;
+			height: 40px;
+		}
+	}
+
 	.Footer {
 		display: flex;
 		margin-top: 25px;
+
+		position: relative;
 
 		align-items: center;
 		justify-content: center;
 
 		background-color: $primaryBG;
-		padding: 10px;
+		padding: 7px;
+			
+		border-radius: var(--secondary-border-radius);
+
+		min-width: 450px;
 
 		.Divider {
 			background-color: $primaryHover;
@@ -169,7 +191,7 @@
 
 			border-radius: 100px;
 
-			margin: 0 10px;
+			margin: 0 auto;
 		}
 
 		.Filename {
@@ -180,6 +202,21 @@
 			padding: 5px 10px;
 
 			cursor: pointer;
+			margin: auto;
+
+			border-radius: var(--primary-border-radius);
+
+			&:hover {
+				background: rgba(white, 0.05);
+			}
+
+			&:first-child {
+				margin-left: 0;
+			}
+
+			&:last-child {
+				margin-right: 0;
+			}
 
 			&.Disabled {
 				opacity: 0.15;

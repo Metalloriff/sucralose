@@ -28,6 +28,7 @@ export function TagItemContextMenu({ tag }) {
 			SearchField.handleSearch(SearchField.value.trim() + " " + tag),
 		subscribe: () => {
 			const localUser = UserStore.getLocalUser();
+			if (!Array.isArray(localUser.subscriptions)) localUser.subscriptions = [];
 			localUser.subscriptions.push(tag);
 
 			Database.update(
@@ -37,7 +38,14 @@ export function TagItemContextMenu({ tag }) {
 				.catch(err => (console.error(err), Toasts.showToast("An unknown error occurred", "Failure")));
 		},
 		unsubscribe: () => {
+			const localUser = UserStore.getLocalUser();
+			localUser.subscriptions = localUser.subscriptions.filter(sub => sub !== tag);
 
+			Database.update(
+				Database.doc("users", localUser.uid),
+				localUser.firebaseSerialized
+			).then(() => Toasts.showToast(<span>Added <b>{tag}</b> to subscribed tags</span>))
+				.catch(err => (console.error(err), Toasts.showToast("An unknown error occurred", "Failure")));
 		},
 		blacklist: () => {
 
@@ -59,7 +67,7 @@ export function TagItemContextMenu({ tag }) {
 
 			{UserStore.getLocalUser()?.signedIn && (
 				<React.Fragment>
-					{~UserStore.getLocalUser().subscriptions.indexOf(tag.toLowerCase()) ? (
+					{~(UserStore.getLocalUser().subscriptions ?? []).indexOf(tag.toLowerCase()) ? (
 						<ContextMenu.Item
 							autoClose
 							icon={<Feather.BellOff />}

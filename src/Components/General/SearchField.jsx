@@ -2,11 +2,12 @@
 import React from "react";
 import * as Feather from "react-feather";
 import API from "../../Classes/API";
-import { ActionTypes, joinClassNames } from "../../Classes/Constants";
+import { ActionTypes, joinClassNames, openFileDialog } from "../../Classes/Constants";
 import { dispatcher } from "../../Classes/Dispatcher";
 import QueryManager from "../../Classes/QueryManager";
 import RoutesStore from "../../Classes/Stores/RoutesStore";
 import InlineLoading from "../InlineLoading";
+import Toasts from "../Toasts";
 import Tooltip from "../Tooltip";
 import "./SearchField.scss";
 
@@ -51,6 +52,50 @@ export default function SearchField({
 		QueryManager.set("page", null);
 	}
 
+	async function imageSearch() {
+		const [file] = await openFileDialog();
+		if (!file) return;
+
+		const md5Response = await API.request("posts", { tags: "md5:" + file.name.split(".")[0] }).catch(() => null);
+		if (md5Response?.posts?.length) {
+			dispatcher.dispatch({
+				type: ActionTypes.UPDATE_ROUTE,
+				path: `/post/${md5Response.posts[0].id}`
+			});
+
+			return;
+		}
+
+		Toasts.showToast("Could not find any post by MD5 hash! True image searching will be added soon!", "Failure");
+
+		return;
+
+		const reader = new FileReader();
+
+		reader.onload = async e => {
+			const formData = new FormData();
+			formData.append("file", e.target.result.split(",")[1]);
+
+			const req = await fetch("https://saucenao.com/search.php", {
+				method: "POST",
+				mode: "no-cors",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: new URLSearchParams({
+					file,
+					output_type: 2,
+					api_key: "d7aca1f6f9e269dd42f9897af2e9538421b756e4"
+				})
+			});
+			const results = req;
+
+			console.log(results);
+		};
+
+		reader.readAsDataURL(file);
+	}
+
 	SearchField.handleSearch = search;
 
 	// Create the events object.
@@ -71,12 +116,19 @@ export default function SearchField({
 			setAutoCompleteEntries([null]);
 
 			// Fetch the auto complete entries from the api.
-			const entries = await API.request("tags/autocomplete", {
-				"search[name_matches]": search
+			const entries = await API.request("tags", {
+				"search[name_matches]": search + "*",
+				"search[order]": "count",
+				"limit": 10
 			});
 
-			// Set the auto complete entries.
-			setAutoCompleteEntries(entries?.tags ?? entries);
+			try {
+				// Set the auto complete entries.
+				setAutoCompleteEntries([...(entries || [])]);
+			}
+			catch (e) {
+				setAutoCompleteEntries([]);
+			}
 		}, 200),
 		onChange: e => {
 			const { value } = e.currentTarget;
@@ -120,6 +172,7 @@ export default function SearchField({
 				autoComplete="off"
 				placeholder={placeholder} />
 
+			<Feather.Image className="Button" onClick={imageSearch.bind(null, null)} />
 			<Feather.Search className="Button" onClick={search.bind(null, null)} />
 
 			<div className="AutoCompleteContainer">
