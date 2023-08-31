@@ -20,7 +20,7 @@ export default function SetsList({ options = {} }) {
 	const [hash, setHash] = React.useState(window.location.hash);
 
 	const page = QueryManager.useState(() => QueryManager.get("page")) || 1;
-	const query = QueryManager.useState(() => QueryManager.get("query")) || "";
+	const query = QueryManager.useState(() => QueryManager.get("search")) || "";
 
 	React.useEffect(() => {
 		API.request(
@@ -69,6 +69,7 @@ export default function SetsList({ options = {} }) {
 
 	return (
 		<div className="Sets">
+
 			{!isFetching && !sets?.length && (
 				<div className="NoSets">
 					<div className="Placeholder">
@@ -84,6 +85,10 @@ export default function SetsList({ options = {} }) {
 			)}
 
 			<div className="Items">
+				<div className="PostSet PostSetWarning">
+					NOTE! This page is currently experimental and very buggy.
+				</div>
+
 				{sets?.map(set => (
 					<LinkWrapper key={set.id} href={`/posts?search=set:${set.shortname}`}>
 						<div className="PostSet">

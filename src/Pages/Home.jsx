@@ -1,5 +1,6 @@
 import * as Feather from "react-feather";
 import { Trello } from "react-feather";
+import logo from "../Assets/logo.png";
 import { joinClassNames } from "../Classes/Constants";
 import RoutesStore from "../Classes/Stores/RoutesStore";
 import UserStore from "../Classes/Stores/UserStore";
@@ -208,7 +209,96 @@ export const newsPosts = [{
 			</TutorialModal>
 		);
 	}
+}, {
+	date: "08/31/2023",
+	title: "Bug Fixes & Features",
+	modal: function NewsPost08312023() {
+		return (
+			<TutorialModal title={this.title}>
+				<h2>This is a WIP website!</h2>
+
+				<p>
+					I have many projects, and work on them in a priority list of what I'm motivated to do, and what I feel needs doing. If you have any suggestions, notice any missing features in Sucralose, or find any pesky bugs, please reach out to my Telegram or Discord (Metalloriff on both). Knowing that someone is waiting for features heavily motivates me to work on whichever project you're waiting for. This does go for my other projects as well.
+				</p>
+
+				<p>
+					That being said, if you are a new user of Sucralose, you notice notice features missing from e621 and are considering leaving. Please reach out to me and I will have it fixed as soon as possible. This is still a work in progress, and a large solo project.
+				</p>
+
+				<h2>What's new?</h2>
+
+				<p>
+					The logo is now on the homepage!
+				</p>
+
+				<p>
+					Popular page -- The popular page now has a slightly better UI, much less bugs (and it actually works), and you can now choose the time range. The popular page also adds the date and range into the URI, so you can copy a specific date/date range for bookmarking or sharing.
+				</p>
+
+				<p>
+					Post modal -- There's now artist tags underneath the controls on the post modal. Open a post and see an art style you really like? Now you can be lazy and don't have to close the modal to view their other works.
+				</p>
+
+				<h2>Patched bugs</h2>
+
+				<p>
+					Fixed a fatal bug related to new users. If you were a new user and couldn't save any settings, this should be fixed now.
+				</p>
+
+				<p>
+					Blacklists now take aliases into account. This means that before, if you blacklisted "futa", it would still show because the tag is technically "intersex".<br />
+					Now, when you save your blacklist, it will automatically forward all tags from their aliases to the real tag.
+				</p>
+
+				<p>
+					No more random jumps to page 2 when opening tags! This was driving me mad.
+				</p>
+
+				<p>
+					Fixed the popular page.
+				</p>
+
+				<p>(Potentially) fixed a bug causing scrolling to randomly say you've reached the end, when you have not. This requires longer testing, as it wasn't easily reproducable.</p>
+
+				<h2>What's next?</h2>
+
+				<p>
+					You can see more of what's planned in the future on the roadmap.
+				</p>
+			</TutorialModal>
+		);
+	}
 }];
+
+const basePatchNote = {
+	date: "08/31/2023",
+	title: "Bug Fixes & Features",
+	modal: function NewsPost08312023() {
+		return (
+			<TutorialModal title={this.title}>
+				<h2>This is a WIP website!</h2>
+
+				<p>
+					I have many projects, and work on them in a priority list of what I'm motivated to do, and what I feel needs doing. If you have any suggestions, notice any missing features in Sucralose, or find any pesky bugs, please reach out to my Telegram or Discord (Metalloriff on both). Knowing that someone is waiting for features heavily motivates me to work on whichever project you're waiting for. This does go for my other projects as well.
+				</p>
+
+				<p>
+					That being said, if you are a new user of Sucralose, you notice notice features missing from e621 and are considering leaving. Please reach out to me and I will have it fixed as soon as possible. This is still a work in progress, and a large solo project.
+				</p>
+
+				<h2>What's new?</h2>
+
+				<h2>Patched bugs</h2>
+
+				<h2>What's next?</h2>
+
+				<p>
+					You can see more of what's planned in the future on the roadmap.
+				</p>
+			</TutorialModal>
+		);
+	}
+};
 
 export function NavigationButtonsComponent({ className, tooltipMode = false }) {
 	const localUser = UserStore.useState(() => UserStore.getLocalUser());
@@ -274,6 +364,9 @@ export default function Home() {
 	return (
 		<div className="MainPage">
 			<div className="Head">
+				<div className="Logo">
+					<img src={logo} alt="Logo" />
+				</div>
 				<h1>Sucralose!</h1>
 				<div>A sweeter way to use <a href="https://e621.net">e621</a>.</div>
 			</div>

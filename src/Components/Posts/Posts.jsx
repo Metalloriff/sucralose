@@ -21,7 +21,7 @@ export function postFilter(post, index) {
 	if (!localUser) return;
 
 	const bidx = parseInt(localUser.currentBlacklist);
-	const blacklist = localUser?.blacklists[bidx] ?? [];
+	const blacklist = localUser?.blacklists?.[bidx] ?? [];
 
 	// Handle blacklist
 	if (bidx > -1) {
@@ -50,12 +50,12 @@ export function postFilter(post, index) {
 export let PostsContext = React.createContext({});
 
 // Two months later, this code makes me want to punch a wall.
-// ^^^ That was copilot completing that sentence. Thanks, copilot! ^^^
-let lastPageChange = Date.now();
+// Idk how many more years later, but it makes me want to punch a wall even more.
+let lastPageChange = performance.now();
 let hasReachedEnd = false;
 let lastHash = RoutesStore.getFormattedRoute()[0];
 let lastSuccessfulRequest = null;
-export default function Posts({ prependedTags, emptyPlaceholder = null, request = null }) {
+export default function Posts({ prependedTags, emptyPlaceholder = null, request = null, pagingDisabled = false }) {
 	const [posts, setPosts] = React.useState([]);
 	const [isFetching, setFetchingState] = React.useState(true);
 	const [search, setSearchQuery] = React.useState(QueryManager.get("search"));
@@ -70,12 +70,12 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 	dispatcher.useForceUpdater(ActionTypes.UPDATE_LOCAL_USER);
 
 	React.useEffect(() => {
-		setPosts([]);
 		setFetchingState(true);
+		setPosts([]);
 	}, [searchQuery]);
 
 	React.useEffect(() => {
-		if (!hasReachedEnd) {
+		if (!hasReachedEnd && !pagingDisabled) {
 			setFetchingState(true);
 		}
 	}, [pageQuery]);
@@ -84,11 +84,15 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 		const page = parseInt(pageQuery || 1);
 		const tags = [
 			searchQuery,
-			prependedTags,
-			...(UserStore.getLocalUser()?.blacklist ?? []).map(tag => `-${tag}`)
-		].join(" ");
+			prependedTags
+		].join(" ").trim();
 
-		if (cachedRequest !== request) {
+		if (_.isArray(cachedRequest?.[1]?.tags)) {
+			cachedRequest[1].tags = cachedRequest[1].tags.join(" ").trim();
+		}
+
+		if (JSON.stringify(cachedRequest) !== JSON.stringify(request)) {
+			console.log({ cachedRequest: JSON.stringify(cachedRequest), request: JSON.stringify(request) });
 			!isFetching && setFetchingState(true);
 			setCachedRequest(request);
 		}
@@ -211,11 +215,14 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 			setSearchQuery(tags);
 			setHash(RoutesStore.getFormattedRoute()[0]);
 		}, 0);
-	}, [isFetching, request, searchQuery, pageQuery]);
+	}, [isFetching, request, cachedRequest, searchQuery, pageQuery]);
 
 	// Handle infinite scrolling.
 	useEventListener("scroll", () => {
-		if (Date.now() - lastPageChange < 2000 || isFetching || !posts?.length || hasReachedEnd) return;
+		if (pagingDisabled) return;
+
+		// How much shit do I throw on here to prevent this bug from happening?
+		if (performance.now() - lastPageChange < 2000 || isFetching || !posts?.length || hasReachedEnd || document.querySelector(".FetchingStateModal.Active")) return;
 
 		const target = document.documentElement;
 
@@ -224,7 +231,7 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 				pushHistory: false
 			});
 
-			lastPageChange = Date.now();
+			lastPageChange = performance.now();
 		}
 	}, { dependencies: [isFetching, posts, request, hasReachedEnd] });
 

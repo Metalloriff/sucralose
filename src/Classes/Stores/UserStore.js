@@ -82,21 +82,26 @@ const UserStoreClass = class UserStore extends Store {
 							);
 						}
 						else {
-							const messaging = getMessaging(Database.app);
+							try {
+								const messaging = getMessaging(Database.app);
 
-							getToken(messaging, { vapidKey }).then(async token => {
-								const ref = Database.doc("users", fbUser.uid, "fcmTokens", token.slice(0, 10));
-								const existing = await Database.getDoc(ref);
+								getToken(messaging, { vapidKey }).then(async token => {
+									const ref = Database.doc("users", fbUser.uid, "fcmTokens", token.slice(0, 10));
+									const existing = await Database.getDoc(ref);
 
-								Database.set(
-									ref,
-									{
-										token,
-										registered: existing ? existing.registered : serverTimestamp(),
-										lastLogin: serverTimestamp()
-									}
-								);
-							});
+									Database.set(
+										ref,
+										{
+											token,
+											registered: existing ? existing.registered : serverTimestamp(),
+											lastLogin: serverTimestamp()
+										}
+									);
+								}).catch(console.error);
+							}
+							catch (err) {
+								console.error(err);
+							}
 						}
 					});
 

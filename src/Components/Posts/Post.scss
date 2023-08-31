@@ -171,9 +171,28 @@
 			.UpVotes {
 				height: 3px;
 				background-color: var(--green);
-
+ 
 				margin-top: -2px;
 			}
+		}
+	}
+}
+
+.ModalArtistsList {
+	position: absolute;
+	top: 48px;
+	padding: 5px 10px;
+	border-radius: 2px;
+	background: $secondaryBG;
+	gap: 7px;
+
+	.ArtistTag {
+		&.MainTag {
+			font-weight: bold;
+		}
+
+		&:not(:first-child):not(:last-child)::after {
+			content: ", ";
 		}
 	}
 }

@@ -200,7 +200,7 @@ export function SubscriptionsSection() {
 
 export function BlacklistsSection() {
 	const localUser = UserStore.useState(() => UserStore.getLocalUser());
-	const blacklists = UserStore.useState(() => UserStore.getLocalUser()?.blacklists);
+	const blacklists = UserStore.useState(() => UserStore.getLocalUser()?.blacklists ?? []);
 
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 

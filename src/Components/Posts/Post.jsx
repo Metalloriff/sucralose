@@ -162,7 +162,7 @@ export default function Post({ post }) {
 										preview: post.sample?.url ?? post.preview?.url ?? post.file?.url,
 										full: post.file.url
 									})), {
-									buttons: index => <PostModalButtons post={context.posts[index]} />
+									buttons: index => <PostModalButtons post={context.posts.filter(postFilter)[index]} />
 								})} />
 					</ContextMenu.Wrapper>
 
@@ -348,7 +348,8 @@ export function PostModalButtons({ post }) {
 		is_favorited,
 		score,
 		fav_count,
-		file
+		file,
+		tags
 	} = post;
 
 	const [, forceUpdate] = React.useReducer(x => x + 1, 0);
@@ -409,6 +410,14 @@ export function PostModalButtons({ post }) {
 			}} onClick={events.download}>
 				<Feather.Download />
 				<Tooltip style={{ color: "var(--txt-color)" }}>Download</Tooltip>
+			</div>
+
+			<div className="ModalArtistsList FlexCenter">
+				<div className="ArtistTag MainTag">Artists - </div>
+
+				{tags.artist.filter(artist => artist !== "conditional_dnp").map(artist => (
+					<a className="ArtistTag" key={artist} href={`/posts?search=${artist}`}>{artist}</a>
+				))}
 			</div>
 		</React.Fragment>
 	);

@@ -1,4 +1,5 @@
 ﻿import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import _ from "lodash";
 import React from "react";
 import * as Feather from "react-feather";
 import { ActionTypes } from "../../Classes/Constants";
@@ -41,9 +42,17 @@ export default function AuthModal() {
 			// Create the user account.
 			createUserWithEmailAndPassword(Database.auth, emailField.value, passwordField.value)
 				// Then navigate to the settings.
-				.then(() => {
+				.then(async ({ user }) => {
 					Modals.pop();
 
+					// DO NOT REMOVE THIS
+					// This seems useless, but it's because Firebase is really fucking stupid
+					await Database.set(
+						Database.doc("users", user.uid),
+						_.pick(user, ...[
+							"e621user"
+						])
+					);
 
 					Toasts.showToast("Welcome to Sucralose!", "Success");
 

@@ -5,7 +5,15 @@
 		font-size: 1.25em;
 		text-align: center;
 
-		margin: 100px 0;
+		margin-top: 50px;
+		margin-bottom: 100px;
+
+		.Logo {
+			img {
+				width: 100px;
+				height: 100px;
+			}
+		}
 
 		h1 {
 			color: $primaryColor;

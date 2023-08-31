@@ -38,6 +38,7 @@
 	},
 	"scripts": {
 		"start": "npx webpack serve --open",
+		"open": "lt --port 3000 --local-host localhost",
 		"build": "npx webpack --mode production --env=mode=production"
 	}
 }

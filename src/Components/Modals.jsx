@@ -85,8 +85,13 @@ function ImageComponent({ image, setLoaded, setFailed, className, onClick, isPre
 				{!className && !isPreview && <img src={image.full} alt="Image failed to load" className={className}
 					style={{ display: loaded ? null : "none" }} {...events} />}
 
-				{!isPreview && !loaded && (
-					<div className="LoadingIndicator FlexCenter">
+				{!isPreview && (
+					<div className="LoadingIndicator FlexCenter" ref={e => {
+						if (!e) return;
+
+						if (loaded) setTimeout(() => e.classList.remove("Visible"), 0);
+						else setTimeout(() => e.classList.add("Visible"), 0);
+					}}>
 						<Loader className="Spinner" />
 					</div>
 				)}

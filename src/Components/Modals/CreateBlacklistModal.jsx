@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../Classes/API";
 import Database from "../../Classes/Database";
 import UserStore from "../../Classes/Stores/UserStore";
 import { Modals } from "../Modals";
@@ -10,21 +11,50 @@ export default function CreateBlacklistModal({ edit = null, index = null, callba
 	const [blacklist, setBlacklist] = useState(edit?.tags ?? "");
 
 	const events = {
-		cancel: Modals.pop,
-		save: () => {
+		cancel: () => Modals.pop(),
+		save: async () => {
 			const user = UserStore.getLocalUser();
 			user.blacklists = user.blacklists ?? [];
+
+			const tags = blacklist.split("\n").map(tag => tag.toLowerCase().split(/\s+/));
+			const aliases = {};
+			for (const x in tags) {
+				for (const y in tags[x]) {
+					const tag = tags[x][y];
+
+					if (aliases[tag]) {
+						tags[x][y] = aliases[tag];
+
+						continue;
+					}
+
+					try {
+						const [{ consequent_name }] = await API.request("tag_aliases", {
+							"commit": "Search",
+							"search[name_matches]": tags[x][y]
+						});
+
+						aliases[tags[x][y]] = consequent_name;
+						tags[x][y] = consequent_name;
+					}
+					catch (err) {
+						console.error(err);
+					}
+				}
+			}
+
+			const correctedTags = tags.map(t => t.join(" ")).join("\n");
 
 			if (index !== null) {
 				user.blacklists[index] = {
 					name: title,
-					tags: blacklist
+					tags: correctedTags
 				};
 			}
 			else {
 				user.blacklists.push({
 					name: title,
-					tags: blacklist
+					tags: correctedTags
 				});
 			}
 

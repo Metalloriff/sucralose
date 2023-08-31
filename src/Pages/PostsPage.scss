@@ -9,14 +9,15 @@
 		justify-content: center;
 		
 		h2 {
-			margin-right: 20px;
+			margin-right: 10px;
 		}
 		
 		input {
-			background-color: $secondaryBG;
-			color: var(--txt-color);
+			background-color: var(--txt-color);
+			color: black;
 			
 			padding: 7px;
+			border-radius: 2px;
 			
 			border: none;
 			outline: none;
@@ -38,13 +39,13 @@
 			word-wrap: break-word;
 		}
 	}
+}
 
-	.Blacklists {
-		padding: 10px;
+.Blacklists {
+	padding: 10px;
 
-		.Label {
-			margin: 0;
-			margin-right: 20px;
-		}
+	.Label {
+		margin: 0;
+		margin-right: 10px;
 	}
 }

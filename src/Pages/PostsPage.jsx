@@ -1,13 +1,10 @@
 ﻿import { useEffect, useReducer, useState } from "react";
 import API from "../Classes/API";
-import { ActionTypes, getRandomKey } from "../Classes/Constants";
-import Database from "../Classes/Database";
+import { ActionTypes } from "../Classes/Constants";
 import { dispatcher } from "../Classes/Dispatcher";
 import UserStore from "../Classes/Stores/UserStore";
-import Dropdown, { DropdownItem } from "../Components/Dropdown";
 import Header from "../Components/General/Header";
-import { Modals } from "../Components/Modals";
-import CreateBlacklistModal from "../Components/Modals/CreateBlacklistModal";
+import BlacklistDropdown from "../Components/Posts/BlacklistDropdown";
 import Posts from "../Components/Posts/Posts";
 import "./PostsPage.scss";
 
@@ -33,58 +30,11 @@ export default function PostsPage({
 		return () => setPool(null);
 	}, [searchTags]);
 
-	const onChangeBlacklist = selection => {
-		if (selection.startsWith("action.")) {
-			switch (selection) {
-				case "action.create":
-					Modals.push(<CreateBlacklistModal />);
-					break;
-
-				case "action.edit":
-					dispatcher.dispatch({
-						type: ActionTypes.UPDATE_ROUTE,
-						path: "/settings"
-					});
-					break;
-			}
-
-			return forceUpdate();
-		}
-
-		UserStore.getLocalUser().currentBlacklist = selection;
-
-		Database.update(
-			Database.doc("users", UserStore.getLocalUser().uid),
-			{ currentBlacklist: selection }
-		);
-
-		dispatcher.dispatch({
-			type: ActionTypes.UPDATE_LOCAL_USER,
-			user: UserStore.getLocalUser()
-		});
-	};
-
 	return (
 		<div className="PostsPage">
 			<Header searchPlaceholder={searchPlaceholder} />
 
-			{UserStore.getLocalUser() && (
-				<div className="Blacklists FlexCenter">
-					<h2 className="Label">Blacklist</h2>
-
-					<Dropdown value={UserStore.getLocalUser().currentBlacklist} onChange={onChangeBlacklist} key={getRandomKey()}>
-						<DropdownItem value="defaults.none">None</DropdownItem>
-
-						{(UserStore.getLocalUser().blacklists ?? []).map(({ name, tags }, index) => (
-							<DropdownItem key={index} value={index}>{name}</DropdownItem>
-						))}
-
-						<DropdownItem value="action.none" />
-						<DropdownItem value="action.edit">EDIT BLACKLISTS</DropdownItem>
-						<DropdownItem value="action.create">CREATE NEW BLACKLIST</DropdownItem>
-					</Dropdown>
-				</div>
-			)}
+			<BlacklistDropdown forceUpdate={forceUpdate} />
 
 			{pool && (
 				<div className="PoolInfo">
