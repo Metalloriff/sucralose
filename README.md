@@ -42,6 +42,11 @@ And also, I just enjoy making things, and e621 provides a pretty good and easy-t
 ## Where do I try it?
 You can visit the site at https://sucralose.top/.
 
+## What's planned for the future?
+You can view the Trello page at https://trello.com/b/27bqbHA1/roadmap.
+
+There you can see anything I'm planning to add, along with known bugs.
+
 ## Why is a login necessary?
 The login allows you to store your e621 username and API key in a shared account between devices, along with the ability to add custom features like subscriptions, saved searches, and quick blacklist switching via my database.
 
