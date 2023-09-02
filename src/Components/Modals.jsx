@@ -54,7 +54,13 @@ function ImageComponent({ image, setLoaded, setFailed, className, onClick, isPre
 	const [loaded, _setLoaded] = React.useState(false);
 
 	const events = {
-		onLoad: () => (setLoaded?.(true), setFailed?.(false), _setLoaded(true)),
+		onLoad: e => {
+			e.target.decode().then(() => {
+				setLoaded?.(true);
+				setFailed?.(false);
+				_setLoaded(true);
+			});
+		},
 		onError: () => (setLoaded?.(true), setFailed?.(true), _setLoaded(true)),
 		onClick
 	};
@@ -421,7 +427,6 @@ export class Modals extends React.Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		document.documentElement.style.overflowY = this.state.stack.length ? "hidden" : null;
-		document.documentElement.style.marginRight = this.state.stack.length ? "5px" : null;
 	}
 
 	handleBackdropClick(e) {

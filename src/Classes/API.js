@@ -1,4 +1,5 @@
-﻿import Toasts from "../Components/Toasts";
+﻿import _ from "lodash";
+import Toasts from "../Components/Toasts";
 import UserStore from "./Stores/UserStore";
 
 export default new class E621API {
@@ -22,14 +23,8 @@ export default new class E621API {
 	 * @returns {string} An endpoint URL.
 	 */
 	getEndpoint(sub, args = {}, json = true) {
-		// Get the stored login data.
-		let login = this.loginData;
-		// If the login or api key is null, then clean the login object.
-		if (!login.login || !login.api_key) login = {};
-
 		// Create the request params object.
 		const params = new URLSearchParams({
-			...login,
 			...args,
 			_client: "Sucralose/2.0 by Metalloriff"
 		});
@@ -54,6 +49,10 @@ export default new class E621API {
 			await new Promise(r => setTimeout(r, 50));
 		// Set the last made request to the current time.
 		this.lastMadeRequest = Date.now();
+
+		// Apply authorization, if valid
+		const { login, api_key } = this.loginData;
+		login && api_key && _.set(restOptions, ["headers", "authorization"], "Basic " + btoa(`${login}:${api_key}`));
 
 		// Return the response object.
 		return await fetch(this.getEndpoint(sub, args, json), restOptions)
@@ -143,6 +142,17 @@ export default new class E621API {
 			{},
 			false,
 			{ method: "DELETE" }
-		).then(r => (delete this.#favoriting[postId], r));
+		).then(r => (delete this.#favoriting[postId], r)).catch(err => {
+			console.error(err);
+
+			// For when they inevitably still haven't fixed this issue.
+			Toasts.showToast(
+				<>
+					Due to an API issue on e621's side, it is currently impossible to unfavorite posts via their API. Please <a href={`https://e621.net/posts/${postId}#remove-fav-button`}>click here</a> to manually unfavorite it.
+				</>,
+				"Failure",
+				10
+			);
+		});
 	}
 }

@@ -64,7 +64,9 @@ export default function CreateSetModal({ postId }) {
 			);
 
 			response.post_ids.push(postId);
-			UserStore.getLocalUser().sets.push(response);
+
+			const sets = await UserStore.getLocalUser().getSets();
+			sets.push(response);
 
 			Toasts.showToast("Successfully created set", "Success");
 			await Modals.pop();

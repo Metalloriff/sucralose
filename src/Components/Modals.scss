@@ -22,6 +22,8 @@
 	bottom: 0;
 	right: 0;
 
+	max-width: 100vw;
+
 	z-index: 10000;
 
 	> .ModalContainer {
@@ -108,8 +110,16 @@
 
 		max-height: 80vh;
 
+		.jsgif {
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+
 		img,
-		video {
+		video,
+		.jsgif, canvas {
 			max-width: 90vw;
 			height: 100%;
 
@@ -153,7 +163,7 @@
 	}
 
 	.LoadingIndicator {
-		background: $overlay;
+		background: rgba(black, 0.1);
 
 		position: absolute;
 		top: 0;

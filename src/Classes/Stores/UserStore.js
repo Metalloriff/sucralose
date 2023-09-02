@@ -14,6 +14,7 @@ import Store from "../Store";
 
 const cache = {};
 let localUser = null;
+let _localSets;
 
 const vapidKey = "BBWvMxlJ7kaRqFNxqnzChq6HE_wXmrt39gSgbsivwiccua2xFmK1qQqtPLtBQRkjBN0xM1HDlQ8ycbXaUiWulzo";
 
@@ -45,13 +46,17 @@ const UserStoreClass = class UserStore extends Store {
 						{
 							e621User,
 							signedIn: true,
-							sets: data.username && await API.request(
-								"post_sets",
-								{
-									commit: "Search",
-									"search[creator_name]": data.username
-								}
-							),
+							async getSets() {
+								if (!data.username) return null;
+
+								return _localSets ?? (_localSets = await API.request(
+									"post_sets",
+									{
+										commit: "Search",
+										"search[creator_name]": data.username
+									}
+								));
+							},
 
 							get firebaseSerialized() {
 								const output = {};

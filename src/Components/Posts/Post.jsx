@@ -1,5 +1,5 @@
 ﻿import _ from "lodash";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Feather from "react-feather";
 import API from "../../Classes/API";
 import { download, joinClassNames } from "../../Classes/Constants";
@@ -229,10 +229,10 @@ export default function Post({ post }) {
 								</ContextMenu.Wrapper>
 							)}
 
-							<Button tooltipText="Download" tooltipSide="right"
+							{/* <Button tooltipText="Download" tooltipSide="right"
 								onClick={events.download}>
 								<Feather.Download />
-							</Button>
+							</Button> */}
 
 							<LinkWrapper href={`post/${id}`}>
 								<Button tooltipText="View Post" tooltipSide="right">
@@ -248,13 +248,21 @@ export default function Post({ post }) {
 }
 
 export function PostContextMenu({ post }) {
-	const sets = UserStore.getLocalUser()?.sets ?? [];
+	const [sets, initSets] = useState([]);
+
+	useEffect(() => {
+		const user = UserStore.getLocalUser();
+
+		if (user) {
+			user.getSets().then(sets => initSets(sets));
+		}
+	})
 
 	const [, forceUpdate] = React.useReducer(x => x + 1, 0);
 
 	const events = {
 		toggleSet: async index => {
-			const set = UserStore.getLocalUser()?.sets[index];
+			const set = UserStore.getLocalUser()?.getSets?.()[index];
 			const postIndex = set.post_ids.indexOf(post.id);
 
 			if (postIndex !== -1) {
@@ -405,12 +413,12 @@ export function PostModalButtons({ post }) {
 				<Tooltip style={{ color: "var(--txt-color)" }}>Favorite</Tooltip>
 			</div>
 
-			<div className="Button Flex" style={{
+			{/* <div className="Button Flex" style={{
 				alignItems: "center", justifyContent: "center"
 			}} onClick={events.download}>
 				<Feather.Download />
 				<Tooltip style={{ color: "var(--txt-color)" }}>Download</Tooltip>
-			</div>
+			</div> */}
 
 			<div className="ModalArtistsList FlexCenter">
 				<div className="ArtistTag MainTag">Artists - </div>

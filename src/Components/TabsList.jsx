@@ -28,12 +28,7 @@ export default class extends React.Component {
 					))}
 				</div>
 
-				{children.map((child, i) => (
-					<div className="TabItem" key={i}
-						style={{ display: this.state.active === i ? "block" : "none" }}>
-						{child}
-					</div>
-				))}
+				{children[this.state.active]}
 			</div>
 		);
 	}

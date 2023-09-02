@@ -32,10 +32,12 @@
 		margin: 0 auto;
 		
 		.PostSet {
+			position: relative;
 			background-color: rgba(black, 0.2);
 			
-			margin-bottom: 20px;
+			margin-bottom: 15px;
 			padding: 10px;
+			border-radius: 3px 3px 0 0;
 			
 			.Head {
 				display: flex;
@@ -48,6 +50,11 @@
 				.ShortName {
 					margin-left: auto;
 					user-select: text;
+
+					span {
+						margin-left: 5px;
+						color: var(--primary-color);
+					}
 				}
 			}
 			
@@ -62,11 +69,23 @@
 				transform: scale(1.01);
 				box-shadow: 0 0 12px rgba(black, 0.25);
 			}
-		}
-	}
 
-	.PostSet.PostSetWarning {
+			.Footer {
+				position: absolute;
+				left: 0; right: 0;
+				bottom: -37px;
+				background: rgba(black, 0.1);
+				padding: 5px;
+				border-radius: 0 0 3px 3px;
+			}
+		}
+	}.PostSet.PostSetWarning {
 		background: rgba(#ff6666, 0.2);
 		color: #ff7777;
+	}
+	
+	.PostSet.PostSetNote {
+		background: rgba(#6666ff, 0.2);
+		color: #8888ff;
 	}
 }

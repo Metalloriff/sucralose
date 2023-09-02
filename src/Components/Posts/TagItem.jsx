@@ -28,12 +28,12 @@ export function TagItemContextMenu({ tag }) {
 			SearchField.handleSearch(SearchField.value.trim() + " " + tag),
 		subscribe: () => {
 			const localUser = UserStore.getLocalUser();
-			if (!Array.isArray(localUser.subscriptions)) localUser.subscriptions = [];
+			localUser.subscriptions = localUser.subscriptions ?? [];
 			localUser.subscriptions.push(tag);
 
 			Database.update(
 				Database.doc("users", localUser.uid),
-				localUser.firebaseSerialized
+				{ subscriptions: localUser.subscriptions }
 			).then(() => Toasts.showToast(<span>Added <b>{tag}</b> to subscribed tags</span>))
 				.catch(err => (console.error(err), Toasts.showToast("An unknown error occurred", "Failure")));
 		},
@@ -43,8 +43,8 @@ export function TagItemContextMenu({ tag }) {
 
 			Database.update(
 				Database.doc("users", localUser.uid),
-				localUser.firebaseSerialized
-			).then(() => Toasts.showToast(<span>Added <b>{tag}</b> to subscribed tags</span>))
+				{ subscriptions: localUser.subscriptions }
+			).then(() => Toasts.showToast(<span>Removed <b>{tag}</b> from subscribed tags</span>))
 				.catch(err => (console.error(err), Toasts.showToast("An unknown error occurred", "Failure")));
 		},
 		blacklist: () => {
@@ -81,11 +81,11 @@ export function TagItemContextMenu({ tag }) {
 						>Subscribe</ContextMenu.Item>
 					)}
 
-					<ContextMenu.Item
+					{/* <ContextMenu.Item
 						autoClose
 						icon={<Feather.EyeOff />}
 						onClick={events.blacklist}
-					>Blacklist</ContextMenu.Item>
+					>Blacklist</ContextMenu.Item> */}
 
 					<ContextMenu.Divider />
 				</React.Fragment>

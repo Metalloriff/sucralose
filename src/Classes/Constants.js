@@ -13,7 +13,8 @@ export function joinClassNames() {
 				break;
 
 			default:
-				final += arguments[i];
+				if (arguments[i])
+					final += arguments[i];
 				break;
 		}
 
@@ -44,7 +45,7 @@ export function openFileDialog(options = {}) {
 }
 
 export function download(uri) {
-	return fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(uri)}`)
+	return fetch("https://cors-proxy.htmldriven.com/?url=" + encodeURIComponent(uri))
 		.then(res => res.blob())
 		.then(blob => {
 			const a = Object.assign(document.createElement("a"), {
@@ -53,11 +54,8 @@ export function download(uri) {
 				download: uri.split("/")[uri.split("/").length - 1]
 			});
 
-			document.body.appendChild(a);
 			a.click();
-
 			window.URL.revokeObjectURL(a.href);
-			a.remove();
 		})
 		.catch(err => (console.error(err), Toasts.showToast("Failed to save image!", "Failure")));
 }

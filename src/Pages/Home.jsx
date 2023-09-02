@@ -239,6 +239,12 @@ export const newsPosts = [{
 					Post modal -- There's now artist tags underneath the controls on the post modal. Open a post and see an art style you really like? Now you can be lazy and don't have to close the modal to view their other works.
 				</p>
 
+				<p>Sets -- The sets page is now a little less buggy, and favorite sets has been added! You can right click or tap and hold on a set to toggle favorite, and there's a favorites tab in the sets page.</p>
+
+				<p>
+					The download button has been temporarily/permanently removed. For now, right click/tap and hold and hit save as. It will be re-added if I can find an efficient way to do it.
+				</p>
+
 				<h2>Patched bugs</h2>
 
 				<p>
@@ -258,7 +264,13 @@ export const newsPosts = [{
 					Fixed the popular page.
 				</p>
 
+				<p>Fixed a Firefox-specific bug causing image flashing on the modals.</p>
+
+				<p>Fixed an intentional(? I do not know what me 2 years ago was thinking) bug causing the entire page to shift 5 pixels when opening an image.</p>
+
 				<p>(Potentially) fixed a bug causing scrolling to randomly say you've reached the end, when you have not. This requires longer testing, as it wasn't easily reproducable.</p>
+
+				<p>Fixed adding and removing to and from subscriptions via context menu.</p>
 
 				<h2>What's next?</h2>
 
