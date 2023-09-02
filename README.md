@@ -32,6 +32,8 @@ And also, I just enjoy making things, and e621 provides a pretty good and easy-t
 ![](https://i.imgur.com/L87tQcM.png)
 ![](https://i.imgur.com/t1EQLOL.png)
 ![](https://i.imgur.com/dmfuskc.png)
+![](https://i.imgur.com/0IBRFZZ.png)
+![](https://i.imgur.com/Q4pxGIy.pngg)
 ![](https://i.imgur.com/ZJ3AmKT.png)
 ![](https://i.imgur.com/ErYaCNu.png)
 ![](https://i.imgur.com/Vv642Fg.jpg)
