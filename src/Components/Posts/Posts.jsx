@@ -92,7 +92,6 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 		}
 
 		if (JSON.stringify(cachedRequest) !== JSON.stringify(request)) {
-			console.log({ cachedRequest: JSON.stringify(cachedRequest), request: JSON.stringify(request) });
 			!isFetching && setFetchingState(true);
 			setCachedRequest(request);
 		}

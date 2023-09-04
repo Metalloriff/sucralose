@@ -34,8 +34,6 @@ export default function PostComments({ id }) {
 		});
 	}, 10000, true);
 
-	console.log(comments);
-
 	return (
 		<div className="PostComments">
 			{comments === null ? (

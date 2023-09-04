@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Feather from "react-feather";
 import { Loader } from "react-feather";
+import API from "../Classes/API";
 import { ActionTypes, getRandomKey, joinClassNames } from "../Classes/Constants";
 import { dispatcher } from "../Classes/Dispatcher";
 import { useEventListener, useOnUnmount } from "../Classes/Hooks";
@@ -90,6 +91,103 @@ function ImageComponent({ image, setLoaded, setFailed, className, onClick, isPre
 
 				{!className && !isPreview && <img src={image.full} alt="Image failed to load" className={className}
 					style={{ display: loaded ? null : "none" }} {...events} />}
+
+				{!isPreview && (
+					<div className="LoadingIndicator FlexCenter" ref={e => {
+						if (!e) return;
+
+						if (loaded) setTimeout(() => e.classList.remove("Visible"), 0);
+						else setTimeout(() => e.classList.add("Visible"), 0);
+					}}>
+						<Loader className="Spinner" />
+					</div>
+				)}
+			</>
+		);
+}
+
+function ImagePostComponent({ image, setLoaded, setFailed, className, onClick, isPreview = false, notes = null }) {
+	const ref = React.useRef();
+	const [loaded, _setLoaded] = React.useState(false);
+
+	const events = {
+		onLoad: e => {
+			e.target.decode().then(() => {
+				setLoaded?.(true);
+				setFailed?.(false);
+				_setLoaded(true);
+			});
+		},
+		onError: () => (setLoaded?.(true), setFailed?.(true), _setLoaded(true)),
+		onClick
+	};
+
+	useOnUnmount(() => {
+		if (ref.current) {
+			ref.current.pause();
+		}
+	});
+
+	const [imageSize, setImageSize] = useState(null);
+
+	useEffect(() => {
+		if (!loaded) return;
+
+		const img = document.getElementById("modal-img");
+		if (!img) return;
+
+		setImageSize({
+			actualWidth: img.naturalWidth,
+			actualHeight: img.naturalHeight,
+			renderedWidth: img.offsetWidth,
+			renderedHeight: img.offsetHeight,
+			widthMult: img.offsetWidth / img.naturalWidth,
+			heightMult: img.offsetHeight / img.naturalHeight
+		});
+	}, [loaded]);
+
+	if (!image) return null;
+
+	return /\.webm$/.test(image.full) && !isPreview
+		? <video
+			ref={ref}
+			src={image.full}
+			controls={!className}
+			loop
+			muted
+			autoPlay={!isPreview}
+			className={className}
+			{...events}
+		/> : (
+			<>
+				<img src={image.preview} alt="Preview failed to load"
+					style={{ display: loaded && !className ? "none" : null }} className={className} />
+
+				{!className && !isPreview && <img id="modal-img" src={image.full} alt="Image failed to load" className={className}
+					style={{ display: loaded ? null : "none" }} {...events} />}
+
+				{notes && imageSize && (
+					notes === true ? (
+						null
+					) : (
+						<div className="NotesContainer">
+							{notes.map(({ x, y, width, height, body }) => (
+								<div
+									className="Note"
+									style={{
+										left: x * imageSize.widthMult,
+										top: y * imageSize.heightMult,
+										width: width * imageSize.widthMult, height: height * imageSize.heightMult
+									}}
+								>
+									<div className="NoteBody">
+										{body}
+									</div>
+								</div>
+							))}
+						</div>
+					)
+				)}
 
 				{!isPreview && (
 					<div className="LoadingIndicator FlexCenter" ref={e => {
@@ -286,6 +384,233 @@ export function ImageModal({ url, getSources, buttons }) {
 				<div className="Divider" />
 
 				{buttons?.(index) ?? (
+					<>
+						<div className="Button" onClick={() => (setExpandedState(!expanded))}>
+							{expanded ? <Feather.Minimize /> : <Feather.Maximize />}
+							<Tooltip>{expanded ? "Compress" : "Expand"}</Tooltip>
+						</div>
+
+						<div className="Button">
+							<Feather.Clipboard />
+							<Tooltip>Copy URL</Tooltip>
+						</div>
+
+						<LinkWrapper className="Button" style={{ display: "block", color: "white" }}
+							href={sources[index].full}>
+							<Feather.ExternalLink />
+							<Tooltip>Open In New Tab</Tooltip>
+						</LinkWrapper>
+					</>
+				)}
+
+				<div className="Divider" />
+
+				<div className={joinClassNames("Button Arrow Right",
+					[!sources.length || index + 1 >= sources.length, "Disabled"])} onClick={() => nav(1)}>
+					<Feather.ChevronRight />
+					<Tooltip>Next Image</Tooltip>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export function PostModal({ startPost, posts, buttons }) {
+	const sources = posts.map(post => ({
+		preview: post.sample?.url ?? post.preview?.url ?? post.file?.url,
+		full: post.file.url
+	}));
+
+	const container = React.useRef();
+
+	// Create a state based on the index of the current url
+	const [index, _setIndex] = React.useState(posts.indexOf(startPost));
+	function setIndex(index) {
+		// We don't talk about this in my job interview.
+		document.querySelector(`[src="${sources[index].preview}"]`)?.scrollIntoView();
+
+		_setIndex(index);
+	}
+
+	const post = posts[index];
+
+	// Handle the modal state query.
+	const modalStateQuery = QueryManager.useState(() => QueryManager.get("modalState"));
+	const [modalState, setModalState] = React.useState(false);
+
+	// Handle the modal state.
+	React.useEffect(() => {
+		if (modalStateQuery !== "open") {
+			if (!modalState) {
+				setModalState(true);
+
+				QueryManager.set("modalState", "open");
+			}
+			else {
+				Modals.pop();
+			}
+		}
+	}, [modalStateQuery]);
+
+	// Handle the history state.
+	React.useEffect(() => {
+		return () => {
+			setTimeout(() => {
+				if (QueryManager.get("modalState") === "open") {
+					window.history.back();
+
+					dispatcher.dispatch({
+						type: ActionTypes.UPDATE_PAGE
+					});
+				}
+			}, 0);
+		};
+	}, []);
+
+	React.useEffect(() => {
+		container && container.current.style.setProperty("--translation", "0");
+	}, [container, index]);
+
+	const [notes, setNotes] = useState(null);
+
+	useEffect(() => {
+		if (post.has_notes) {
+			setNotes(true);
+
+			API.request("notes", { "search[post_id]": post.id }).then(notes => notes ? (console.log(notes), setNotes(notes)) : setNotes(null));
+		}
+		else setNotes(null);
+	}, [index]);
+
+	// Create a navigate function to handle safely navigating images
+	const nav = dir =>
+		sources[index + dir]
+			? (setLoaded(false), setFailed(false), setIndex(index + dir))
+			: Toasts.showToast("No more images in this direction!", "Failure");
+	// Create an expanded state based on the serialized settings state
+	const [expanded, setExpandedState] = React.useState(true);
+
+	// These are placeholders, I'm too lazy to add them
+	const [loaded, setLoaded] = React.useState(false);
+	const [failed, setFailed] = React.useState(false);
+
+	// Handle keyboard navigation/controls.
+	useEventListener("keydown", ({ key }) => {
+		switch (key) {
+			case "Escape": return Modals.pop();
+			case "ArrowLeft": case "a": return nav(-1);
+			case "ArrowRight": case "d": return nav(1);
+			// This is bad practice. Don't do this.
+			case "ArrowUp": case "w": return window.currentModalEvents?.vote(1);
+			case "ArrowDown": case "s": return window.currentModalEvents?.vote(-1);
+			case "f": return window.currentModalEvents?.favorite();
+		}
+	}, { dependencies: [index] });
+
+	// Handle touch controls
+	const mobileEvents = {
+		onTouchStart: e => {
+			const tapX = e.touches[0].clientX;
+			const tapY = e.touches[0].clientY;
+
+			let translation = 0;
+
+			const handler = e => {
+				const alias = 50;
+				translation = e.touches[0].clientX - tapX;
+
+				if (Math.abs(translation) < alias) return;
+				if (translation < 0) translation += alias;
+				else translation -= alias;
+
+				translation /= window.innerWidth;
+				translation *= 100;
+
+				container.current.style.setProperty(
+					"--translation",
+					translation
+				);
+			};
+
+			document.addEventListener("touchmove", handler);
+
+			let remove;
+			document.addEventListener("touchend", remove = () => {
+				setTimeout(() => {
+					const translation = parseFloat(container.current.style.getPropertyValue("--translation"));
+					container.current.style.setProperty(
+						"--translation",
+						translation > 5
+							? "100"
+							: translation < -5
+								? "-100"
+								: "0"
+					);
+
+					document.removeEventListener("touchmove", handler);
+					document.removeEventListener("touchend", remove);
+
+					setTimeout(() => {
+						if (!container.current) return;
+
+						const translation = parseFloat(container.current.style.getPropertyValue("--translation"));
+						if (translation >= 75) {
+							nav(-1);
+						}
+						else if (translation <= -75) {
+							nav(1);
+						}
+					}, 200);
+				}, 100);
+			});
+		}
+	};
+
+	// Render bender
+	return (
+		<div ref={container} className="ImageModal" onClick={e => e.target === e.currentTarget && Modals.pop()} {...mobileEvents}>
+			<div className={joinClassNames("ImageContainer", [expanded, "Expanded"])}>
+				<ImageComponent
+					key={getRandomKey()}
+					image={sources[index - 1]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+
+					className="Previous"
+					onClick={() => nav(-1)}
+					isPreview
+				/>
+
+				<ImagePostComponent
+					key={getRandomKey()}
+					image={sources[index]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+					notes={notes}
+				/>
+
+				<ImageComponent
+					key={getRandomKey()}
+					image={sources[index + 1]}
+					setLoaded={setLoaded}
+					setFailed={setFailed}
+
+					className="Next"
+					onClick={() => nav(1)}
+					isPreview
+				/>
+			</div>
+
+			<div className="Footer">
+				<div className={joinClassNames("Button Arrow Left",
+					[!sources.length || !index, "Disabled"])} onClick={() => nav(-1)}>
+					<Feather.ChevronLeft />
+					<Tooltip>Previous Image</Tooltip>
+				</div>
+
+				<div className="Divider" />
+
+				{buttons?.(posts[index]) ?? (
 					<>
 						<div className="Button" onClick={() => (setExpandedState(!expanded))}>
 							{expanded ? <Feather.Minimize /> : <Feather.Maximize />}

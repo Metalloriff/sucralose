@@ -109,12 +109,43 @@
 		position: relative;
 
 		max-height: 80vh;
+		
+		.NotesContainer {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
 
-		.jsgif {
-			display: inline-flex;
-			justify-content: center;
-			align-items: center;
-			flex-direction: column;
+			pointer-events: none;
+
+			.Note {
+				position: absolute;
+				pointer-events: all;
+
+				background: rgba(black, 0.2);
+				border-radius: 2px;
+
+				cursor: pointer;
+
+				.NoteBody {
+					position: absolute;
+					background: rgba(black, 0.5);
+					backdrop-filter: blur(7px) invert(0.25);
+					padding: 7px;
+					border-radius: 2px;
+
+					opacity: 0;
+					transform: scale(0.98);
+					transition: opacity $ft, transform $ft;
+					pointer-events: none;
+				}
+
+				&:hover .NoteBody {
+					opacity: 1;
+					transform: none;
+				}
+			}
 		}
 
 		img,

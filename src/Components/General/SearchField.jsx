@@ -89,8 +89,6 @@ export default function SearchField({
 				})
 			});
 			const results = req;
-
-			console.log(results);
 		};
 
 		reader.readAsDataURL(file);

@@ -8,7 +8,7 @@ import { Settings } from "../../Pages/SettingsPage";
 import ContextMenu from "../ContextMenuHandler";
 import InlineLoading from "../InlineLoading";
 import LinkWrapper from "../LinkWrapper";
-import { Modals, copyToClipboard, openImageModal } from "../Modals";
+import { Modals, PostModal, copyToClipboard } from "../Modals";
 import CreateSetModal from "../Modals/CreateSetModal";
 import Tooltip from "../Tooltip";
 import "./Post.scss";
@@ -157,13 +157,14 @@ export default function Post({ post }) {
 						<img src={previewImage} className="Preview" alt="Preview"
 							onLoad={() => setPreviewLoaded(true)}
 							onClick={() =>
-								openImageModal(file.url, () =>
-									context.posts.filter(postFilter).map(post => ({
-										preview: post.sample?.url ?? post.preview?.url ?? post.file?.url,
-										full: post.file.url
-									})), {
-									buttons: index => <PostModalButtons post={context.posts.filter(postFilter)[index]} />
-								})} />
+								Modals.push(
+									<PostModal
+										startPost={post}
+										posts={context.posts.filter(postFilter)}
+										buttons={post => <PostModalButtons post={post} />}
+									/>
+								)
+							} />
 					</ContextMenu.Wrapper>
 
 					{file.ext === "webm" && (
