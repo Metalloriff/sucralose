@@ -7,7 +7,6 @@ import { Modals } from "../Modals";
 import CreateBlacklistModal from "../Modals/CreateBlacklistModal";
 
 export default function BlacklistDropdown({ forceUpdate }) {
-
 	const onChangeBlacklist = selection => {
 		if (selection.startsWith("action.")) {
 			switch (selection) {
@@ -55,5 +54,5 @@ export default function BlacklistDropdown({ forceUpdate }) {
 				<DropdownItem value="action.create">CREATE NEW BLACKLIST</DropdownItem>
 			</Dropdown>
 		</div>
-	)
+	);
 }

@@ -5,11 +5,12 @@ import { dispatcher } from "../Classes/Dispatcher";
 import UserStore from "../Classes/Stores/UserStore";
 import Header from "../Components/General/Header";
 import BlacklistDropdown from "../Components/Posts/BlacklistDropdown";
+import OrderDropdown from "../Components/Posts/OrderDropdown";
 import Posts from "../Components/Posts/Posts";
 import "./PostsPage.scss";
 
 export default function PostsPage({
-	search: prependedTags = "",
+	search: prependedTags = null,
 	searchPlaceholder,
 	emptyPlaceholder = null
 }) {
@@ -18,6 +19,7 @@ export default function PostsPage({
 
 	const [forceUpdateIteration, forceUpdate] = useReducer(x => x + 1, 0);
 	const [pool, setPool] = useState(null);
+	const [order, setOrder] = useState(null);
 
 	useEffect(() => {
 		if (searchTags.startsWith("pool:")) {
@@ -35,6 +37,7 @@ export default function PostsPage({
 			<Header searchPlaceholder={searchPlaceholder} />
 
 			<BlacklistDropdown forceUpdate={forceUpdate} />
+			{prependedTags !== "order:rank" && <OrderDropdown onChange={setOrder} />}
 
 			{pool && (
 				<div className="PoolInfo">
@@ -49,7 +52,7 @@ export default function PostsPage({
 			{UserStore.getLocalUser() && (
 				<Posts
 					key={prependedTags}
-					prependedTags={prependedTags}
+					prependedTags={[prependedTags, order].filter(Boolean).join(" ")}
 					emptyPlaceholder={emptyPlaceholder}
 				/>
 			)}

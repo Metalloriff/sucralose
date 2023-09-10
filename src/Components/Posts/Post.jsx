@@ -126,8 +126,7 @@ export default function Post({ post }) {
 	const conditionalDnp = tags.artist.indexOf("conditional_dnp");
 	!!~conditionalDnp && tags.artist.splice(conditionalDnp, 1);
 
-	// Render me harder, daddy.
-	return previewImage && file.ext !== "swf" ? (
+	return previewImage ? (
 		<PostsContext.Consumer>
 			{context => (
 				<div className="Post">
@@ -147,25 +146,47 @@ export default function Post({ post }) {
 							)}
 					</div>
 
-					{!previewLoaded && (
+					{!previewLoaded && file.ext !== "swf" && (
 						<div className="Preview Flex Loading">
 							<InlineLoading />
 						</div>
 					)}
 
-					<ContextMenu.Wrapper menu={<PostContextMenu post={post} />}>
-						<img src={previewImage} className="Preview" alt="Preview"
-							onLoad={() => setPreviewLoaded(true)}
-							onClick={() =>
-								Modals.push(
-									<PostModal
-										startPost={post}
-										posts={context.posts.filter(postFilter)}
-										buttons={post => <PostModalButtons post={post} />}
-									/>
-								)
-							} />
-					</ContextMenu.Wrapper>
+					{file.ext === "swf" ? (
+						<ContextMenu.Wrapper menu={<PostContextMenu post={post} />}>
+							<div className="VideoOverlay" style={{ pointerEvents: "none" }}>
+								<Feather.Box />
+								<h2 style={{ marginLeft: 5 }}>Flash Game</h2>
+							</div>
+
+							<div
+								className="Preview AbsoluteCover"
+								onClick={() =>
+									Modals.push(
+										<PostModal
+											startPost={post}
+											posts={context.posts.filter(postFilter)}
+											buttons={post => <PostModalButtons post={post} />}
+										/>
+									)
+								}
+							/>
+						</ContextMenu.Wrapper>
+					) : (
+						<ContextMenu.Wrapper menu={<PostContextMenu post={post} />}>
+							<img src={previewImage} className="Preview" alt="Preview"
+								onLoad={() => setPreviewLoaded(true)}
+								onClick={() =>
+									Modals.push(
+										<PostModal
+											startPost={post}
+											posts={context.posts.filter(postFilter)}
+											buttons={post => <PostModalButtons post={post} />}
+										/>
+									)
+								} />
+						</ContextMenu.Wrapper>
+					)}
 
 					{file.ext === "webm" && (
 						<div className="VideoOverlay">
@@ -386,7 +407,7 @@ export function PostModalButtons({ post }) {
 		<React.Fragment>
 			<div className="Button Flex" style={{
 				alignItems: "center", justifyContent: "center",
-				color: score.our_score === 1 ? "var(--primary-color)" : null
+				color: score.our_score === 1 ? "var(--green)" : null
 			}} onClick={events.vote.bind(null, 1)}>
 				<Feather.ThumbsUp />
 				<div style={{ marginLeft: 5 }}>{score.up}</div>
@@ -396,7 +417,7 @@ export function PostModalButtons({ post }) {
 
 			<div className="Button Flex" style={{
 				alignItems: "center", justifyContent: "center",
-				color: score.our_score === -1 ? "var(--primary-color)" : null
+				color: score.our_score === -1 ? "var(--red)" : null
 			}} onClick={events.vote.bind(null, -1)}>
 				<Feather.ThumbsDown />
 				<div style={{ marginLeft: 5 }}>{-score.down}</div>
@@ -406,7 +427,7 @@ export function PostModalButtons({ post }) {
 
 			<div className="Button Flex" style={{
 				alignItems: "center", justifyContent: "center",
-				color: is_favorited ? "var(--red)" : null
+				color: is_favorited ? "var(--pink)" : null
 			}} onClick={events.favorite}>
 				<Feather.Heart />
 				<div style={{ marginLeft: 5 }}>{fav_count}</div>

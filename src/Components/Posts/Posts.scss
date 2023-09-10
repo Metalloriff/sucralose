@@ -32,7 +32,7 @@
   
   .Items {
     padding: 40px;
-    gap: 40px;
+    gap: 20px;
 
     display: grid;
     grid-template-columns: repeat(var(--post-column-count), 1fr);

@@ -65,14 +65,12 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 	const searchQuery = QueryManager.useState(() => QueryManager.get("search"));
 	const pageQuery = QueryManager.useState(() => QueryManager.get("page"));
 
-	const localUser = UserStore.useState(() => UserStore.getLocalUser());
-	const currentBlacklist = UserStore.useState(() => UserStore.getLocalUser()?.currentBlacklist);
 	dispatcher.useForceUpdater(ActionTypes.UPDATE_LOCAL_USER);
 
 	React.useEffect(() => {
 		setFetchingState(true);
 		setPosts([]);
-	}, [searchQuery]);
+	}, [searchQuery, prependedTags]);
 
 	React.useEffect(() => {
 		if (!hasReachedEnd && !pagingDisabled) {
@@ -126,7 +124,9 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 			function chunkifyTags(request) {
 				let chunk = tagChunk;
 				const newTags = [];
-				const tags = (request[1].tags || "").split(" ").filter(Boolean);
+				let tags = (request[1].tags || "");
+				if (typeof (tags) !== "string") tags = tags.join(" ");
+				tags = tags.split(" ").filter(Boolean);
 
 				if (tags.length >= tagChunk) {
 					while (chunk <= tags.length + tagChunk) {

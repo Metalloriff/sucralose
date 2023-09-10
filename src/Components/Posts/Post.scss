@@ -152,11 +152,17 @@
 			}
 
 			&.Active {
-				color: $primaryColor;
+				&:nth-child(1) {
+					color: var(--green);
+				}
+				
+				&:nth-child(2) {
+					color: var(--red);
+				}
 			}
 
 			&.Favorited {
-				color: $secondaryColor;
+				color: var(--pink);
 			}
 		}
 

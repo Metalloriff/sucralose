@@ -203,6 +203,14 @@ function ImagePostComponent({ image, setLoaded, setFailed, className, onClick, i
 		);
 }
 
+function SwfPlayer({ src }) {
+	return (
+		<div className="SwfPlayer FlexCenter AbsoluteCover" style={{ background: "var(--primary-bg)" }}>
+			SWF FILES CANNOT BE PLAYED ON SUCRALOSE
+		</div>
+	);
+}
+
 export function ImageModal({ url, getSources, buttons }) {
 	// Get the sources or create a single-item array
 	const sources = typeof (getSources) === "function" ? getSources().filter(u => u) : [url];
@@ -581,13 +589,17 @@ export function PostModal({ startPost, posts, buttons }) {
 					isPreview
 				/>
 
-				<ImagePostComponent
-					key={getRandomKey()}
-					image={sources[index]}
-					setLoaded={setLoaded}
-					setFailed={setFailed}
-					notes={notes}
-				/>
+				{sources[index].full.endsWith(".swf") ? (
+					<SwfPlayer src={sources[index].full} />
+				) : (
+					<ImagePostComponent
+						key={getRandomKey()}
+						image={sources[index]}
+						setLoaded={setLoaded}
+						setFailed={setFailed}
+						notes={notes}
+					/>
+				)}
 
 				<ImageComponent
 					key={getRandomKey()}

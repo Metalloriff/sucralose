@@ -2,13 +2,13 @@ import _ from "lodash";
 import React from "react";
 import { ChevronsUp } from "react-feather";
 import "./App.scss";
-import "./city-fog-theme.css";
 import { ActionTypes, joinClassNames } from "./Classes/Constants";
 import { dispatcher } from "./Classes/Dispatcher";
 import { useEventListener, useMediaQuery } from "./Classes/Hooks";
 import RoutesStore from "./Classes/Stores/RoutesStore";
 import UserStore from "./Classes/Stores/UserStore";
 import ContextMenu from "./Components/ContextMenuHandler";
+import DarkReaderDetector from "./Components/DarkReaderDetector";
 import { Modals } from "./Components/Modals";
 import AuthModal from "./Components/Modals/AuthModal";
 import PageFooter from "./Components/PageElements/PageFooter";
@@ -19,6 +19,7 @@ import PostPage from "./Pages/PostPage";
 import PostsPage from "./Pages/PostsPage";
 import { SetsPage } from "./Pages/SetsPage";
 import SettingsPage, { SettingsRenderer } from "./Pages/SettingsPage";
+import "./city-fog-theme.css";
 
 window.history.scrollRestoration = "manual";
 
@@ -141,6 +142,7 @@ export default function App() {
 			<Modals />
 			<Toasts />
 			<ContextMenu.Handler />
+			<DarkReaderDetector />
 
 			<SettingsRenderer />
 		</div>
