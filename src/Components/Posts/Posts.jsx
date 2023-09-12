@@ -1,5 +1,5 @@
 ﻿import _ from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import * as Feather from "react-feather";
 import App from "../../App";
 import API from "../../Classes/API";
@@ -64,6 +64,14 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 
 	const searchQuery = QueryManager.useState(() => QueryManager.get("search"));
 	const pageQuery = QueryManager.useState(() => QueryManager.get("page"));
+
+	const [columnCount, setColumnCount] = useState(Math.round(window.innerWidth / 480));
+
+	useEventListener("resize", () => {
+		setColumnCount(Math.round(window.innerWidth / 480));
+	}, { target: window });
+
+	console.log(columnCount);
 
 	dispatcher.useForceUpdater(ActionTypes.UPDATE_LOCAL_USER);
 
@@ -240,7 +248,10 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 		<PostsContext.Provider value={{
 			posts
 		}}>
-			<div className="Posts">
+			<div className="Posts" style={{
+				"--post-column-count": columnCount > 3 ? columnCount : 3
+			}}>
+
 				<h2 className="PageLabel">{App.hash}</h2>
 
 				{!isFetching && !filteredPosts?.length && (

@@ -1,0 +1,41 @@
+@import "../Variables.scss";
+
+.NewsModal {
+	position: relative;
+
+	h4 {
+		margin-top: 7px;
+		margin-left: 10px;
+		color: var(--secondary-color);
+		opacity: 0.5;
+	}
+
+	.Arrow {
+		position: fixed;
+		top: calc(50vh - 120px);
+
+		padding: 100px;
+		cursor: pointer;
+		
+		&.ArrowLeft {
+			left: 5vw;
+		}
+
+		&.ArrowRight {
+			right: 5vw;
+		}
+
+		svg {
+			width: 40px;
+			height: 40px;
+		}
+	}
+}
+
+.Mobile .NewsModal {
+	.Arrow {
+		top: unset;
+		bottom: 0;
+		padding: 20px 100px;
+	}
+}
