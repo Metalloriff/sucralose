@@ -9,6 +9,7 @@ import { useEventListener } from "../../Classes/Hooks";
 import QueryManager from "../../Classes/QueryManager";
 import RoutesStore from "../../Classes/Stores/RoutesStore";
 import UserStore from "../../Classes/Stores/UserStore";
+import { Settings } from "../../Pages/SettingsPage";
 import InlineLoading from "../InlineLoading";
 import { Modals } from "../Modals";
 import TutorialModal from "../Modals/TutorialModal";
@@ -249,7 +250,8 @@ export default function Posts({ prependedTags, emptyPlaceholder = null, request 
 			posts
 		}}>
 			<div className="Posts" style={{
-				"--post-column-count": columnCount > 3 ? columnCount : 3
+				"--post-column-count": Math.min(Math.max(columnCount, Settings.props.posts.minColumns.value), Settings.props.posts.maxColumns.value),
+				"--post-height": Settings.props.posts.postHeight.value + "px"
 			}}>
 
 				<h2 className="PageLabel">{App.hash}</h2>

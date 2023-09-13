@@ -77,6 +77,80 @@
 					border: none;
 				}
 			}
+			
+			.SliderElement {
+				position: absolute;
+				top: -1px;
+			
+				appearance: none;
+				border: none;
+				outline: none;
+			
+				background-color: rgba(black, 0.2);
+			
+				height: 25px;
+				padding: 0;
+			
+				width: 100%;
+				border-radius: 100px;
+			
+				opacity: 0;
+				pointer-events: all;
+				z-index: 1000;
+			}
+
+			.SliderContainer {
+				position: relative;
+				gap: 5px;
+				width: 52%;
+
+				pointer-events: none;
+
+				.ResetButton {
+					position: absolute;
+					left: 100%;
+					pointer-events: all;
+				}
+			}
+
+			.Slider {
+				position: relative;
+			
+				appearance: none;
+				border: none;
+				outline: none;
+			
+				background-color: rgba(black, 0.2);
+			
+				height: 7px;
+				padding: 0;
+			
+				width: 100%;
+				border-radius: 100px;
+			
+				.SliderKnob {
+					background-color: white;
+					width: 15px;
+					height: 15px;
+					border-radius: 100px;
+					cursor: pointer;
+					transform: translateX(calc(var(--value) * 20));
+				}
+			
+				.SliderProgress {
+					position: absolute;
+			
+					z-index: -1;
+					border-radius: 100px;
+			
+					width: var(--value);
+					height: 100%;
+			
+					background: white;
+			
+					filter: brightness(1.2);
+				}
+			}
 		}
 
 		&.TagsManager {

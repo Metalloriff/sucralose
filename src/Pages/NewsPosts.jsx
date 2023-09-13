@@ -293,7 +293,7 @@ export const newsPosts = [{
 		);
 	}
 }, {
-	date: "09/12/2023",
+	date: "09/13/2023",
 	title: "Tweaks & Improvements",
 	body: function () {
 		return (
@@ -328,6 +328,14 @@ export const newsPosts = [{
 
 				<p>
 					Patch Notes -- This patch notes window has been improved. There are now arrows to view past notes, the date is shown on the actual modal, and it's less annoying for me to create new notes.
+				</p>
+
+				<p>
+					Minor updates to base design -- I've updated my boilerplate for the website (the baseline of the site), this includes but is not limited to the footer, toast notifications, tooltips, and context menus.
+				</p>
+
+				<p>
+					New settings -- There are 3 new settings at the very bottom of the page, these settings involve the posts page exclusively.
 				</p>
 
 				<h2>Patched bugs</h2>

@@ -17,7 +17,7 @@ export default function DarkReaderDetector() {
 				}}
 			>
 				<style>
-					{"h1 { margin-top: 0; }"}
+					{".DarkReaderNoticeModal h1 { margin-top: 0; } .DarkReaderNoticeModal img { border-radius: 5px; }"}
 				</style>
 
 				<h1>Dark reader detected!</h1>

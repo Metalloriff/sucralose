@@ -5,7 +5,7 @@ export default class extends React.Component {
 	state = { active: null };
 
 	componentDidMount() {
-		this.setState({ active: 0 });
+		this.setState({ active: this.props.tabs[0] });
 	}
 
 	render() {
@@ -14,21 +14,21 @@ export default class extends React.Component {
 		return (
 			<div>
 				<div className="TabsList">
-					{this.props.tabs.filter(Boolean).map((title, index) => (
-						<span key={title} className={"TabItem" + (index === this.state.active ? " Active" : "")} onClick={() => {
-							this.setState({ active: index });
+					{ this.props.tabs.map(title => (
+						<span key={title} className={"TabItem" + (title == this.state.active ? " Active" : "")} onClick={() => {
+							this.setState({ active: title });
 
 							if (this.props.onChange) {
-								this.props.onChange(title, index, this);
+								this.props.onChange(title, this);
 							}
 						}}>
-							<span className="TabItemTitle">{title}</span>
-							<div className="TabItemBorder" />
+							<span className="TabItemTitle">{ title }</span>
+							<div className="TabItemBorder"></div>
 						</span>
-					))}
+					)) }
 				</div>
-
-				{children[this.state.active]}
+					
+				{ children.find(c => c.props.tab == this.state.active) }
 			</div>
 		);
 	}

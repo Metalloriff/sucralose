@@ -1,5 +1,3 @@
-import { Modals } from "../../Components/Modals";
-import AuthModal from "../../Components/Modals/AuthModal";
 import { ActionTypes } from "../Constants";
 import { dispatcher } from "../Dispatcher";
 import Store from "../Store";
@@ -20,10 +18,6 @@ const RoutesStoreClass = class RoutesStore extends Store {
 			dispatcher.dispatch({
 				type: ActionTypes.UPDATE_PAGE
 			});
-
-			if (window.location.hash === "#sign_in" && !Modals.instance.state.stack.length) {
-				Modals.push(<AuthModal />);
-			}
 		});
 	}
 

@@ -1,20 +1,19 @@
-﻿import React from "react";
-import * as Feather from "react-feather";
+﻿import * as Feather from "react-feather";
 import Icon from "../../Assets/icon50x50.png";
-import Heart from "../../Assets/TwemojiHeart.svg";
+import UserStore from "../../Classes/Stores/UserStore";
 import { copyToClipboard } from "../Modals";
 import Tooltip from "../Tooltip";
 import "./PageFooter.scss";
 
-
 export default function PageFooter() {
 	const contacts = {
 		website: () => window.open("https://kinzoku.one/", "_blank"),
-		github: () => window.open("https://github.com/metalloriff/", "_blank"),
-		twitter: () => window.open("https://twitter.com/Metalloriff/", "_blank"),
-		email: () => window.open("mailto:metalloriff@gmail.com", "_blank"),
-		discord: () => copyToClipboard("Metalloriff 💕🌈#2891")
+		github: () => window.open("https://github.com/metalloriff", "_blank"),
+		email: () => window.open("https://kinzoku.one/contact", "_blank"),
+		discord: () => copyToClipboard("@metalloriff")
 	};
+
+	const user = UserStore.useState(() => UserStore.getLocalUser());
 
 	return (
 		<footer>
@@ -23,10 +22,11 @@ export default function PageFooter() {
 					<div className="HeadSection FlexCenter">
 						<img className="Logo" src={Icon} alt="Logo" />
 
-						<div>
+						<div className="BodySection">
 							<h2>Metalloriff</h2>
+
 							<div>
-								Made with <img src={Heart} alt="♥" width={15} height={15} />
+								Web designer
 							</div>
 						</div>
 					</div>
@@ -42,14 +42,9 @@ export default function PageFooter() {
 							<Tooltip>GitHub</Tooltip>
 						</div>
 
-						<div className="ContactEntry" onClick={contacts.twitter}>
-							<Feather.Twitter />
-							<Tooltip>Twitter</Tooltip>
-						</div>
-
 						<div className="ContactEntry" onClick={contacts.email}>
 							<Feather.Mail />
-							<Tooltip>Email</Tooltip>
+							<Tooltip>Contact</Tooltip>
 						</div>
 
 						<div className="ContactEntry" onClick={contacts.discord}>
@@ -64,21 +59,46 @@ export default function PageFooter() {
 				</div>
 
 				<div className="RightSections FlexCenter">
-					<div className="LinksSection">
-						<a href="https://github.com/Metalloriff/sucralose">Source Code</a>
-						<a href="https://feathericons.com/">Icons Used</a>
-						<a href="https://metalloriff.github.io/city-fog">Color Palette</a>
-						<a href="https://kinzoku.one/donate">
-							<img src={Heart} alt="♥" width={15} height={15} />
-							<span style={{ margin: "0 7px" }}>Donate</span>
-							<img src={Heart} alt="♥" width={15} height={15} />
-						</a>
+					<div className="LinksSection Flex">
+						<div className="Contents Flex">
+							<div className="Title">Navigate</div>
+							<a href="/">Home</a>
+							<a href="/posts">Posts</a>
+							<a href="/hot">Hot</a>
+							<a href="/popular">Popular</a>
+							<a href="https://trello.com/b/27bqbHA1/roadmap">Roadmap</a>
+						</div>
 
-						<div className="Copyright">
-							Copyright © {new Date().getFullYear()} Israel Boone
+						{user && (
+							<div className="Contents Flex">
+								<div className="Title">User Navigate</div>
+								<a href="/subscriptions">Subscriptions</a>
+								<a href="/favorites">Favorites</a>
+								<a href="/upvoted">Upvoted</a>
+								<a href="/settings">Settings</a>
+							</div>
+						)}
+
+						<div className="Contents Flex">
+							<div className="Title">Resources</div>
+							<a href="https://metalloriff.github.io/city-fog">Color Palette</a>
+							<a href="https://feathericons.com">Icons Used</a>
+							<a href="https://github.com/metalloriff/sucralose">Source Code</a>
+						</div>
+
+						<div className="Contents Flex">
+
+							<div className="Title">Metalloriff</div>
+							<a href="https://kinzoku.one/donate">Support Me</a>
+							<a href="https://kinzoku.one">My Projects</a>
+							<a href="https://kinzoku.one/contact">Contact</a>
 						</div>
 					</div>
 				</div>
+			</div>
+
+			<div className="Copyright FlexCenter">
+				Copyright© {new Date().getFullYear()} Metalloriff
 			</div>
 		</footer>
 	);

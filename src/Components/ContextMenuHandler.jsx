@@ -1,9 +1,8 @@
 import React, { createRef } from "react";
 import ReactDOM from "react-dom";
-import ChevronIcon from "../Icons/Chevron.svg";
+import { ChevronRight } from "react-feather";
 import "./ContextMenuHandler.scss";
 import ErrorBoundary from "./ErrorBoundary";
-
 
 function exclude(object, ...exclusions) {
 	const output = Object.assign({}, object);
@@ -101,14 +100,11 @@ ContextMenu.Wrapper = class extends React.Component {
 
 		if (this.state.open && this.ref.current) {
 			const [menu] = document.getElementsByClassName("ContextMenuContainer");
+			const rect = menu.getBoundingClientRect();
 
-			if (menu) {
-				const rect = menu.getBoundingClientRect();
-
-				menu.style.transform = rect.y + rect.height > window.innerHeight
-					? `translateY(${window.innerHeight - (rect.y + rect.height) - 20}px)`
-					: null;
-			}
+			menu.style.transform = rect.y + rect.height > window.innerHeight
+				? `translateY(${window.innerHeight - (rect.y + rect.height) - 20}px)`
+				: null;
 		}
 	}
 
@@ -212,7 +208,7 @@ ContextMenu.SubMenuItem = class extends React.Component {
 		return (
 			<div className="ContextMenuItem HasSubMenu" {...props} onClick={this.handleClick} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
 				{this.props.icon}
-				{this.props.label} <img className="ContextSubMenuChevron" src={ChevronIcon} />
+				{this.props.label} <ChevronRight className="ContextSubMenuChevron" />
 				{this.state.open ? (
 					<div className="ContextMenuContainer SubMenuContainer SecondaryBg" ref={this.mount}>
 						<div className="ContextMenu SubMenu">

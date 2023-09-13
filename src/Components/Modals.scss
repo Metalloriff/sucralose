@@ -51,11 +51,12 @@
 	}
 
 	will-change: background-color;
-	transition: background-color 150ms steps(40);
+	transition: background-color 150ms steps(40), backdrop-filter 150ms steps(40);
 	pointer-events: none;
 
 	&.Active {
 		background-color: rgba(black, 0.75);
+		backdrop-filter: blur(5px);
 		pointer-events: all;
 	}
 }

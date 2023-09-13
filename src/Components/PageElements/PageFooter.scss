@@ -3,15 +3,29 @@
 .App > footer {
 	background-color: rgba(black, 0.2);
 	--primary-color: var(--cf-purple);
+		
+	.Copyright {
+		padding: 10px;
+		grid-column-start: 2;
+		grid-column-end: 4;
+		
+		font-family: monospace;
+		font-size: 1.23em;
+		
+		opacity: 0.8;
+		background: rgba(black, 0.15);
+	}
 	
 	.LeftSections {
 		> * {
-			padding: 20px;
+			padding: 25px;
 		}
 	}
 	
 	.HeadSection {
-		> div {
+		padding-bottom: 10px;
+
+		.BodySection {
 			margin-left: 15px;
 			
 			> * {
@@ -62,28 +76,30 @@
 	}
 	
 	.LinksSection {
-		display: grid;
+		// display: grid;
 		margin-right: 10px;
 		
-		grid-template-columns: repeat(3, 140px);
-		
+		// grid-template-columns: repeat(3, 140px);
+
 		@media (max-width: 450px) {
 			display: flex;
 			flex-direction: column;
 		}
-		
-		> * {
-			margin: 15px 0;
-		}
-		
-		.Copyright {
-			grid-column-start: 2;
-			grid-column-end: 4;
+
+		.Contents {
+			flex-direction: column;
+			padding: 20px;
+
+			.Title {
+				font-family: monospace;
+				font-size: 1em;
 			
-			font-family: monospace;
-			font-size: 1.23em;
-			
-			opacity: 0.8;
+				opacity: 0.8;
+			}
+		
+			a {
+				margin: 5px 0;
+			}
 		}
 	}
 }

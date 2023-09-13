@@ -250,8 +250,8 @@ export function BlacklistsSection() {
 }
 
 export default function SettingsPage() {
-	const updateDeBouncer = _.debounce(() => dispatcher.dispatch({ type: ActionTypes.UPDATE_SETTINGS }), 200);
-	const saveDeBouncer = _.debounce(Settings.save.bind(Settings), 2000);
+	const updateDeBouncer = _.debounce(() => dispatcher.dispatch({ type: ActionTypes.UPDATE_SETTINGS }), 1000);
+	const saveDeBouncer = _.debounce(Settings.save.bind(Settings), 3000);
 
 	const localUser = UserStore.useState(() => UserStore.getLocalUser());
 	const [, forceUpdate] = React.useReducer(x => x + 1, 0);
@@ -407,6 +407,26 @@ export const Settings = new class Settings {
 				step: 1,
 				value: 50
 			}
+		},
+		posts: {
+			postHeight: {
+				type: "slider",
+				min: 100, max: 1200,
+				step: 50,
+				value: 300
+			},
+			minColumns: {
+				type: "slider",
+				min: 1, max: 20,
+				step: 1,
+				value: 3
+			},
+			maxColumns: {
+				type: "slider",
+				min: 1, max: 20,
+				step: 1,
+				value: 20
+			}
 		}
 	};
 
@@ -509,14 +529,28 @@ export function SettingField({ name, setting, resetValue, callback }) {
 			<div className="FieldContainer">
 				<h4 className="FieldTitle">{formatCamelCase(name)} - {value}</h4>
 
-				<div className="Flex" style={{ alignItems: "center" }}>
-					<input className="Field ColorField" defaultValue={value}
-						type="range"
-						ref={inputRef}
-						onInput={e => setState(parseFloat(e.currentTarget.value))}
-						min={setting.min} max={setting.max} />
+				<div className="SliderContainer">
+					<div
+						className="Slider Flex"
+						style={{
+							alignItems: "center",
+							"--value": ((value - setting.min) / (setting.max - setting.min) * 100) + "%"
+						}}
+					>
+						<div className="SliderProgress" />
+						<div className="SliderKnob" />
 
-					{resetButton}
+						<input
+							className="Field ColorField SliderElement"
+							defaultValue={value}
+							type="range"
+							ref={inputRef}
+							onInput={e => setState(parseFloat(e.currentTarget.value))}
+							min={setting.min} max={setting.max} step={setting.step}
+						/>
+
+						{resetButton}
+					</div>
 				</div>
 			</div>
 		);

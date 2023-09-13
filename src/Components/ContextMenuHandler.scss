@@ -8,32 +8,48 @@
 	box-shadow: 0 0 14px rgba(black, 0.3);
 
 	background-color: $tertiaryBG;
-	
+
 	font-size: 0.9em;
+	border-radius: 2px;
+
+	animation-name: open-context-menu-animation;
+	animation-timing-function: ease;
+	animation-duration: 200ms;
+
+	@keyframes open-context-menu-animation {
+		from {
+			opacity: 0;
+			transform: scale(0.95);
+		}
+
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
 
 	.ContextMenu {
 		.ContextMenuItem {
-			padding: 7.5px;
-			margin: 7.5px;
-			
+			padding: 5px;
+			margin: 5px;
+
 			display: flex;
 			align-items: center;
-
-			cursor: pointer;
+			border-radius: 2px;
 
 			&.SetCmItem {
 				> svg {
 					transition: transform $ft;
 				}
-				
+
 				&.Active {
 					background-color: $secondaryColor;
 
 					> svg {
 						transform: rotateZ(45deg);
 					}
-					
-					&:Hover {
+
+					&:hover {
 						background-color: $tertiaryHover;
 					}
 				}
@@ -43,34 +59,28 @@
 				color: white;
 				background-color: $primaryColor;
 			}
-			
+
 			> svg {
 				width: 18px;
 				height: 18px;
-				
-				margin-right: 10px;
+
+				margin-right: 5px;
 			}
 
 			&.HasSubMenu {
 				position: relative;
-				
+
 				padding-right: 50px;
 
 				.ContextSubMenuChevron {
 					position: absolute;
-					display: inline-block;
-					
-					filter: invert(85%);
-					
-					width: 12px;
-					right: 8px;
-					bottom: 8px;
+					right: -10px;
 				}
 
 				.ContextMenuContainer.SubMenuContainer {
 					position: absolute;
-					
-					top: -8px;
+
+					top: -10%;
 					left: 100%;
 
 					width: max-content;
@@ -80,7 +90,6 @@
 					display: table-caption;
 
 					.ContextMenu.SubMenu {
-						
 					}
 				}
 			}
@@ -96,7 +105,7 @@
 
 					width: 12px;
 					height: 12px;
-					
+
 					top: 2px;
 					margin-right: 10px;
 
@@ -107,7 +116,10 @@
 						position: absolute;
 						border-radius: 100%;
 
-						top: $m; left: $m; bottom: $m; right: $m;
+						top: $m;
+						left: $m;
+						bottom: $m;
+						right: $m;
 						background-color: $secondaryHover;
 
 						transform: scale(0);
@@ -123,7 +135,7 @@
 					}
 				}
 			}
-			
+
 			.SliderItem {
 				margin-top: 10px;
 				width: 200px;
@@ -132,7 +144,7 @@
 		}
 
 		.ContextMenuDivider {
-			background: var(--txt-color);
+			background: var(--text-color);
 
 			padding: 1px;
 			margin: 7.5px;

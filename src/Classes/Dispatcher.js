@@ -6,7 +6,7 @@ export default class Dispatcher {
 
 	subscribe(event, callback) {
 		if (!this._callbacks[event]) {
-			this._callbacks[event] = new Set();
+			this._callbacks[event] = new Set;
 		}
 
 		this._callbacks[event].add(callback);
@@ -25,12 +25,7 @@ export default class Dispatcher {
 		if (!this._callbacks[event]) return;
 
 		for (const listener of this._callbacks[event]) {
-			try {
-				listener(action);
-			}
-			catch (err) {
-				console.error(err);
-			}
+			listener(action);
 		}
 	}
 

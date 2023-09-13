@@ -12,6 +12,8 @@
 	flex-direction: column;
 	
 	justify-content: flex-end;
+
+	color: white;
 	
 	&.Top {
 		justify-content: flex-start;
@@ -51,7 +53,10 @@
 		will-change: opacity;
 		transition: opacity 500ms ease-in-out;
 		
-		text-shadow: 0 0 10px black;
+		text-shadow: 0 0 10px rgba(black, 0.2);
+		position: absolute;
+		width: max-content;
+		bottom: -22px;
 		
 		&.Visible {
 			opacity: 1;
@@ -62,9 +67,12 @@
 	
 	.Toast {
 		margin: 5px 0;
-		padding: 5px;
-		
-		min-width: 200px;
+		padding: 10px;
+		padding-bottom: 15px;
+		padding-left: 40px;
+		border-radius: 2px;
+
+		min-height: 20px;
 		
 		background-color: $tertiaryBG;
 		text-align: center;
@@ -74,20 +82,45 @@
 		animation: toast-open 500ms ease-in;
 		pointer-events: all;
 
-		&.Success { background-color: $primaryColor; }
-		&.Warning { background-color: #ffd466; }
-		&.Failure { background-color: #ff6666; }
+		width: max-content;
+		max-width: 500px;
 
-		&.Closing { animation: toast-close 500ms ease-out; }
+		&.Closing { animation: toast-close 500ms ease-in-out; }
+
+		transition: bottom 500ms ease-in-out;
+		position: absolute;
+		overflow: hidden;
+
+		font-weight: bold;
 
 		@keyframes toast-open {
-			0% { opacity: 0; transform: scale(0); }
-			80% { transform: scale(1.25); opacity: 1; }
+			from {
+				filter: blur(5px);
+				opacity: 0;
+				transform: scale(1.5);
+			}
+
+			60% {
+				opacity: 0.2;
+			}
+
+			to {
+				opacity: 1;
+			}
 		}
 
 		@keyframes toast-close {
-			0% { opacity: 1; }
-			100% { opacity: 0; transform: scale(0); }
+			from {
+				filter: none;
+				opacity: 1;
+				transform: none;
+			}
+
+			to {
+				opacity: 0;
+				transform: scale(1.1);
+				filter: blur(5px);
+			}
 		}
 		
 		&:Not(.Closing) .ProgressBar {
@@ -95,14 +128,29 @@
 			animation-timing-function: linear;
 			animation-iteration-count: 1;
 			animation-play-state: paused;
+			animation-fill-mode: forwards;
+		}
+
+		.Icon {
+			position: absolute;
+			left: 10px;
+
+			svg {
+				width: 20px;
+				height: 20px;
+
+				stroke-width: 2.5;
+			}
 		}
 		
 		.ProgressBarContainer {
+			position: absolute;
+			bottom: 0; left: 0; right: 0;
+
 			background-color: rgba(black, 0.5);
 			margin-top: 5px;
 			
 			height: 5px;
-			width: 100%;
 			
 			overflow: hidden;
 			

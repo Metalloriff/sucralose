@@ -6,7 +6,7 @@
 
 .Post {
 	position: relative;
-	height: calc(1100px / var(--post-column-count));
+	height: var(--post-height);
 
 	display: flex;
 	flex-direction: column;

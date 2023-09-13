@@ -1,6 +1,4 @@
-﻿import Toasts from "../Components/Toasts";
-
-export function joinClassNames() {
+﻿export function joinClassNames() {
 	let final = "";
 
 	for (let i = 0; i < arguments.length; i++) {
@@ -57,7 +55,7 @@ export function download(uri) {
 			a.click();
 			window.URL.revokeObjectURL(a.href);
 		})
-		.catch(err => (console.error(err), Toasts.showToast("Failed to save image!", "Failure")));
+		.catch(err => (console.error(err), import("../Components/Toasts").then(Toasts => Toasts.showToast("Failed to save image!", "Failure"))));
 }
 
 export function getRandomKey() { return Math.random().toString(36).substr(7); }
@@ -88,4 +86,7 @@ export const ActionTypes = {
 	UPDATE_USER: "UPDATE_USER",
 	UPDATE_LOCAL_USER: "UPDATE_LOCAL_USER",
 	UPDATE_SETTINGS: "UPDATE_SETTINGS",
+	QUEUE_TOAST: "QUEUE_TOAST",
+	REMOVE_TOAST: "REMOVE_TOAST",
+	CLEAR_TOASTS: "CLEAR_TOASTS"
 };
