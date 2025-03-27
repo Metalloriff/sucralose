@@ -142,7 +142,6 @@ export default function App() {
 			<Modals />
 			<Toasts />
 			<ContextMenu.Handler />
-			<DarkReaderDetector />
 
 			<SettingsRenderer />
 		</div>
