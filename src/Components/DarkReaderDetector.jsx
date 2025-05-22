@@ -5,6 +5,7 @@ import { Modals } from "./Modals";
 let hasShown = false;
 export default function DarkReaderDetector() {
 	const openDarkReaderNotice = useCallback(_.debounce(() => {
+		return;
 		if (hasShown) return;
 		hasShown = true;
 
